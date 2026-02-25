@@ -3,11 +3,14 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 
 function Login() {
+  const [showPassword, setSHowPassword] = useState(false);
   return (
     <>
       <div className="py-10">
         <div className="container mx-auto flex items-center justify-between gap-10">
-          <div className="w-[60%] h-150 bg-[#CBE4E8] rounded-sm"></div>
+          <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-[60%] h-150 bg-[#CBE4E8] rounded-sm">
+            <img src="pblic/imgs/loginImg.png" alt="" />
+          </div>
           <div className="w-[40%] pl-10">
             <h2 className="font-Inter font-medium text-[36px] leading-7.5 tracking-[4%] text-MainColor mb-5">
               Log in to Exclusive
@@ -22,27 +25,46 @@ function Login() {
                 placeholder="Email or Phone Number"
                 required
               />
-              <input
-                className="font-Poppins font-normal text-[16px] leading-6 text-MainColor border-b border-[#808080] pb-1 outline-none"
-                type="password"
-                placeholder="Password"
-                required
-              />
+              <div className="relative">
+                <input
+                  className="w-full font-Poppins font-normal text-[16px] leading-6 text-MainColor border-b border-[#808080] pb-1 outline-none"
+                  placeholder="Password"
+                  required
+                  type={showPassword ? "text" : "password"}
+                />
+                {showPassword ? (
+                  <FaRegEyeSlash
+                    className="absolute right-5 top-[50%] translate-y-[-50%] text-MainColor cursor-pointer"
+                    onClick={() => {
+                      setSHowPassword(!showPassword);
+                    }}
+                  />
+                ) : (
+                  <MdOutlineRemoveRedEye
+                    className="absolute right-5 top-[50%] translate-y-[-50%] text-MainColor cursor-pointer"
+                    onClick={() => {
+                      setSHowPassword(!showPassword);
+                    }}
+                  />
+                )}
+              </div>
               <div className="flex items-center justify-between gap-5">
                 <Button
-                type="submit"
-                sx={{
-                  backgroundColor: "#DB4444",
-                  padding: "10px 30px",
-                  "&:hover": {
-                    backgroundColor: "#b33636",
-                  },
-                }}
-                variant="contained"
-              >
-                Log In
-              </Button>
-              <span className="font-Poppins font-normal text-[16px] leading-6 text-[#DB4444] cursor-pointer">Forget Password?</span>
+                  type="submit"
+                  sx={{
+                    backgroundColor: "#DB4444",
+                    padding: "10px 30px",
+                    "&:hover": {
+                      backgroundColor: "#b33636",
+                    },
+                  }}
+                  variant="contained"
+                >
+                  Log In
+                </Button>
+                <span className="font-Poppins font-normal text-[16px] leading-6 text-[#DB4444] cursor-pointer">
+                  Forget Password?
+                </span>
               </div>
             </form>
           </div>

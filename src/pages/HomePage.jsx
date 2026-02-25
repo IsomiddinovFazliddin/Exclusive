@@ -1,73 +1,207 @@
-import React from "react";
+import React, { useContext, useRef, useState } from "react";
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+// import required modules
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import {
   IoIosArrowForward,
   IoMdArrowRoundBack,
   IoMdArrowRoundForward,
 } from "react-icons/io";
 import { IoArrowForward } from "react-icons/io5";
-import { FaRegHeart, FaStar } from "react-icons/fa";
+import { FaRegHeart, FaShippingFast, FaStar } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { RiCustomerService2Fill } from "react-icons/ri";
 import Button from "@mui/material/Button";
+import Product from "../components/Product";
+import { Link } from "react-router-dom";
+import { LuShieldCheck } from "react-icons/lu";
+import { DataContext } from "../App";
 
 function HomePage() {
+  const { setProductModal, categoryData, productData } =
+    useContext(DataContext);
+  const [visibleData, setVisibleData] = useState({
+    flash: 4,
+    best: 4,
+    our: 8,
+  });
   return (
     <>
       <div className="hero mb-15 ">
-        <div className="container mx-auto flexStill items-start gap-10 ">
-          <div className=" border-r border-[#00000042] pt-10 pr-10">
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor flex items-center gap-3 mb-2.5 cursor-pointer">
-              Woman’s Fashion <IoIosArrowForward />
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor flex items-center gap-3 mb-2.5 cursor-pointer">
-              Men’s Fashion <IoIosArrowForward />
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor mb-2.5 cursor-pointer">
-              Electronics
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor mb-2.5 cursor-pointer">
-              Home & Lifestyle
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor mb-2.5 cursor-pointer">
-              Medicine
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor mb-2.5 cursor-pointer">
-              Sports & Outdoor
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor mb-2.5 cursor-pointer">
-              Baby’s & Toys
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor mb-2.5 cursor-pointer">
-              Groceries & Pets
-            </h5>
-            <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor cursor-pointer">
-              Health & Beauty
-            </h5>
+        <div className="container mx-auto flexStill items-start gap-10">
+          <div className=" border-r border-[#00000042] pt-10 pr-2">
+            {categoryData?.map((item, index) => {
+              return (
+                <Link
+                  key={index}
+                  to={""}
+                  className="flex items-center gap-5 w-full mb-5 p-1 rounded-sm transition-all duration-500 ease-in-out hover:bg-[#F5F5F5] pr-10 group"
+                >
+                  <img className="w-8" src={item.image} alt="" />
+                  <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor flex items-center gap-3  cursor-pointer transition-all duration-500 ease-in-out group-hover:text-[#DB4444]">
+                    {item.title} <IoIosArrowForward />
+                  </h5>
+                </Link>
+              );
+            })}
           </div>
-          <div className="flex-1 pt-10 ">
-            <div className=" flex items-center justify-between gap-5 bg-MainColor h-74">
-              <div className="p-15">
-                <div className="flex gap-4 items-center mb-5">
-                  <img className="w-8" src="/imgs/apple.png" alt="" />
-                  <h6 className="font-Poppins font-normal text-[#FAFAFA]">
-                    iPhone 14 Series
-                  </h6>
+          <Swiper
+            spaceBetween={30}
+            centeredSlides={true}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            pagination={{
+              clickable: true,
+            }}
+            navigation={true}
+            modules={[Autoplay, Pagination, Navigation]}
+            className="mySwiper flex-1 pt-10"
+          >
+            <SwiperSlide>
+              <div className="flex-1 pt-10 h-85">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                  <div className="p-15">
+                    <div className="flex gap-4 items-center mb-5">
+                      <img className="w-8" src="/imgs/apple.png" alt="" />
+                      <h6 className="font-Poppins font-normal text-[#FAFAFA]">
+                        iPhone 14 Series
+                      </h6>
+                    </div>
+                    <h2 className="font-Inter font-semibold text-[48px] leading-15 text-[#FAFAFA] mb-3 ">
+                      Up to 10% off Voucher
+                    </h2>
+                    <button className="font-Poppins font-medium text-[16px] leading-6 text-[#FAFAFA] flex items-center gap-2 py-1 border-b border-[#FAFAFA] cursor-pointer">
+                      Shop Now <IoArrowForward className="text-[19px]  " />
+                    </button>
+                  </div>
+                  <div className=" flex items-center justify-center h-full">
+                    <img
+                      className="w-full"
+                      src="/imgs/homeHeroImg.png"
+                      alt=""
+                    />
+                  </div>
                 </div>
-                <h2 className="font-Inter font-semibold text-[48px] leading-15 text-[#FAFAFA] mb-3 ">
-                  Up to 10% off Voucher
-                </h2>
-                <button className="font-Poppins font-medium text-[16px] leading-6 text-[#FAFAFA] flex items-center gap-2 py-1 border-b border-[#FAFAFA] cursor-pointer">
-                  Shop Now <IoArrowForward className="text-[19px]  " />
-                </button>
               </div>
-              <div className="h-74">
-                <img
-                  className="w-full h-full"
-                  src="/imgs/homeHeroImg.png"
-                  alt=""
-                />
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex-1 pt-10 h-85">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                  <div className="p-15">
+                    <div className="flex gap-4 items-center mb-5">
+                      <img className="w-8" src="/imgs/apple.png" alt="" />
+                      <h6 className="font-Poppins font-normal text-[#FAFAFA]">
+                        iPhone 14 Series
+                      </h6>
+                    </div>
+                    <h2 className="font-Inter font-semibold text-[48px] leading-15 text-[#FAFAFA] mb-3 ">
+                      Up to 10% off Voucher
+                    </h2>
+                    <button className="font-Poppins font-medium text-[16px] leading-6 text-[#FAFAFA] flex items-center gap-2 py-1 border-b border-[#FAFAFA] cursor-pointer">
+                      Shop Now <IoArrowForward className="text-[19px]  " />
+                    </button>
+                  </div>
+                  <div className=" flex items-center justify-center h-full">
+                    <img
+                      className="w-full"
+                      src="/imgs/homeHeroImg.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex-1 pt-10 h-85">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                  <div className="p-15">
+                    <div className="flex gap-4 items-center mb-5">
+                      <img className="w-8" src="/imgs/apple.png" alt="" />
+                      <h6 className="font-Poppins font-normal text-[#FAFAFA]">
+                        iPhone 14 Series
+                      </h6>
+                    </div>
+                    <h2 className="font-Inter font-semibold text-[48px] leading-15 text-[#FAFAFA] mb-3 ">
+                      Up to 10% off Voucher
+                    </h2>
+                    <button className="font-Poppins font-medium text-[16px] leading-6 text-[#FAFAFA] flex items-center gap-2 py-1 border-b border-[#FAFAFA] cursor-pointer">
+                      Shop Now <IoArrowForward className="text-[19px]  " />
+                    </button>
+                  </div>
+                  <div className=" flex items-center justify-center h-full">
+                    <img
+                      className="w-full"
+                      src="/imgs/homeHeroImg.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex-1 pt-10 h-85">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                  <div className="p-15">
+                    <div className="flex gap-4 items-center mb-5">
+                      <img className="w-8" src="/imgs/apple.png" alt="" />
+                      <h6 className="font-Poppins font-normal text-[#FAFAFA]">
+                        iPhone 14 Series
+                      </h6>
+                    </div>
+                    <h2 className="font-Inter font-semibold text-[48px] leading-15 text-[#FAFAFA] mb-3 ">
+                      Up to 10% off Voucher
+                    </h2>
+                    <button className="font-Poppins font-medium text-[16px] leading-6 text-[#FAFAFA] flex items-center gap-2 py-1 border-b border-[#FAFAFA] cursor-pointer">
+                      Shop Now <IoArrowForward className="text-[19px]  " />
+                    </button>
+                  </div>
+                  <div className=" flex items-center justify-center h-full">
+                    <img
+                      className="w-full"
+                      src="/imgs/homeHeroImg.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex-1 pt-10 h-85">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                  <div className="p-15">
+                    <div className="flex gap-4 items-center mb-5">
+                      <img className="w-8" src="/imgs/apple.png" alt="" />
+                      <h6 className="font-Poppins font-normal text-[#FAFAFA]">
+                        iPhone 14 Series
+                      </h6>
+                    </div>
+                    <h2 className="font-Inter font-semibold text-[48px] leading-15 text-[#FAFAFA] mb-3 ">
+                      Up to 10% off Voucher
+                    </h2>
+                    <button className="font-Poppins font-medium text-[16px] leading-6 text-[#FAFAFA] flex items-center gap-2 py-1 border-b border-[#FAFAFA] cursor-pointer">
+                      Shop Now <IoArrowForward className="text-[19px]  " />
+                    </button>
+                  </div>
+                  <div className=" flex items-center justify-center h-full">
+                    <img
+                      className="w-full"
+                      src="/imgs/homeHeroImg.png"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
+          </Swiper>
         </div>
       </div>
 
@@ -139,185 +273,21 @@ function HomePage() {
               </div>
             </div>
             <div className="card flex items-center gap-7.5 flex-wrap py-8 justify-between">
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <span className="absolute top-3 left-3 font-Poppins font-normal text-[12px] text-[#FAFAFA] bg-[#DB4444] py-1.5 px-3.5 rounded-sm">
-                  -40%
-                </span>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <span className="absolute top-3 left-3 font-Poppins font-normal text-[12px] text-[#FAFAFA] bg-[#DB4444] py-1.5 px-3.5 rounded-sm">
-                  -40%
-                </span>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <span className="absolute top-3 left-3 font-Poppins font-normal text-[12px] text-[#FAFAFA] bg-[#DB4444] py-1.5 px-3.5 rounded-sm">
-                  -40%
-                </span>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <span className="absolute top-3 left-3 font-Poppins font-normal text-[12px] text-[#FAFAFA] bg-[#DB4444] py-1.5 px-3.5 rounded-sm">
-                  -40%
-                </span>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
+              {productData?.slice(0, visibleData.flash).map((item) => {
+                return <Product key={item.id} item={item} />;
+              })}
             </div>
             <div className="flex justify-center">
               <Button
+                onClick={() => {
+                  setVisibleData((item) => ({
+                    ...item,
+                    flash:
+                      item.flash >= productData?.length
+                        ? 4
+                        : productData?.length,
+                  }));
+                }}
                 sx={{
                   backgroundColor: "#DB4444",
                   padding: "10px 30px",
@@ -327,7 +297,9 @@ function HomePage() {
                 }}
                 variant="contained"
               >
-                View All Products
+                {visibleData.flash >= productData.length
+                  ? "Show All Products"
+                  : "View All Products"}
               </Button>
             </div>
           </div>
@@ -356,66 +328,23 @@ function HomePage() {
               </div>
             </div>
             <div className="flex items-center justify-between py-8">
-              <div className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group">
-                <img
-                  className="mx-auto w-14 h-14 mb-2"
-                  src="/imgs/categoryImg.png"
-                  alt=""
-                />
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                  Phones
-                </h4>
-              </div>
-              <div className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group">
-                <img
-                  className="mx-auto w-14 h-14 mb-2"
-                  src="/imgs/categoryImg.png"
-                  alt=""
-                />
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                  Phones
-                </h4>
-              </div>
-              <div className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group">
-                <img
-                  className="mx-auto w-14 h-14 mb-2"
-                  src="/imgs/categoryImg.png"
-                  alt=""
-                />
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                  Phones
-                </h4>
-              </div>
-              <div className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group">
-                <img
-                  className="mx-auto w-14 h-14 mb-2"
-                  src="/imgs/categoryImg.png"
-                  alt=""
-                />
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                  Phones
-                </h4>
-              </div>
-              <div className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group">
-                <img
-                  className="mx-auto w-14 h-14 mb-2"
-                  src="/imgs/categoryImg.png"
-                  alt=""
-                />
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                  Phones
-                </h4>
-              </div>
-              <div className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group">
-                <img
-                  className="mx-auto w-14 h-14 mb-2"
-                  src="/imgs/categoryImg.png"
-                  alt=""
-                />
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                  Phones
-                </h4>
-              </div>
+              {categoryData?.map((item, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group"
+                  >
+                    <img
+                      className="mx-auto w-14 h-14 mb-2"
+                      src={item.image}
+                      alt=""
+                    />
+                    <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
+                      {item.title}
+                    </h4>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -424,17 +353,26 @@ function HomePage() {
             <div className="flex items-center gap-3 mb-5">
               <div className="w-5 h-10 rounded-sm bg-[#DB4444]"></div>
               <span className="font-Poppins font-semibold text-[16px] leading-5 text-[#DB4444]">
-                Categories
+                This Month
               </span>
             </div>
             <div className="flex items-center justify-between">
               <div className=" flex items-end gap-15">
                 <h2 className="font-Inter font-semibold text-[36px] leading-12 text-MainColor">
-                  Browse By Category
+                  Best Selling Products
                 </h2>
               </div>
               <div className="flex items-center gap-2.5">
                 <Button
+                  onClick={() => {
+                    setVisibleData((item) => ({
+                      ...item,
+                      best:
+                        item.best >= productData?.length
+                          ? 4
+                          : productData?.length,
+                    }));
+                  }}
                   sx={{
                     backgroundColor: "#DB4444",
                     padding: "10px 30px",
@@ -444,175 +382,16 @@ function HomePage() {
                   }}
                   variant="contained"
                 >
-                  View All
+                  {visibleData.best >= productData?.length
+                    ? "Show All"
+                    : "View All"}
                 </Button>
               </div>
             </div>
             <div className="card flex items-center gap-7.5 flex-wrap py-8 justify-between">
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg2.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg2.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg2.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg2.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-5 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080] line-through">
-                    $160
-                  </span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <FaStar className="text-[#FFAD33] text-[16px]" />
-                  <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                    (88)
-                  </span>
-                </div>
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
+              {productData?.slice(0, visibleData.best).map((item) => {
+                return <Product key={item.id} item={item} />;
+              })}
             </div>
           </div>
         </section>
@@ -702,173 +481,19 @@ function HomePage() {
               </div>
             </div>
             <div className="card flex items-center gap-7.5 flex-wrap py-8 justify-between">
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg3.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-3 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <div className="flex gap-3 items-center">
-                    <div className="flex gap-1">
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                    </div>
-                    <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                      (88)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg3.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-3 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <div className="flex gap-3 items-center">
-                    <div className="flex gap-1">
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                    </div>
-                    <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                      (88)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg3.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-3 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <div className="flex gap-3 items-center">
-                    <div className="flex gap-1">
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                    </div>
-                    <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                      (88)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
-              <div className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer relative">
-                <div className="imgs w-full h-62.5 p-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
-                  <img
-                    className="w-full h-full object-cover  rounded-"
-                    src="/imgs/productImg3.png"
-                    alt=""
-                  />
-                  <button className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0">
-                    Add To Cart
-                  </button>
-                </div>
-                <h4 className="font-Poppins font-medium text-[16px] leading-6 text-MainColor mb-2.5">
-                  HAVIT HV-G92 Gamepad
-                </h4>
-                <div className="flex gap-3 mb-2.5">
-                  <h5 className="font-Poppins font-medium text-[16px] text-[#DB4444]">
-                    $120
-                  </h5>
-                  <div className="flex gap-3 items-center">
-                    <div className="flex gap-1">
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                      <FaStar className="text-[#FFAD33] text-[16px]" />
-                    </div>
-                    <span className="font-Poppins font-medium text-[16px] text-[#808080]">
-                      (88)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="absolute top-3 right-3 grid gap-2.5 ">
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <FaRegHeart className="text-MainColor text-[18px]" />
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                    <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
-                  </button>
-                </div>
-              </div>
+              {productData?.slice(0, visibleData.our).map((item) => {
+                return <Product key={item.id} item={item} />;
+              })}
             </div>
             <div className="flex justify-center">
               <Button
+                onClick={() => {
+                  setVisibleData((item) => ({
+                    ...item,
+                    our:
+                      item.our >= productData?.length ? 4 : productData?.length,
+                  }));
+                }}
                 sx={{
                   backgroundColor: "#DB4444",
                   padding: "10px 30px",
@@ -878,7 +503,9 @@ function HomePage() {
                 }}
                 variant="contained"
               >
-                View All Products
+                {visibleData.our >= productData?.length
+                  ? "Show All Products"
+                  : "View All Products"}
               </Button>
             </div>
           </div>
@@ -899,8 +526,8 @@ function HomePage() {
               </div>
             </div>
             <div className="card py-8 flex justify-between gap-8">
-              <div className="w-1/2 h-150 relative border bg-MainColor group overflow-hidden">
-                <img src="" alt="" />
+              <div className="w-1/2 h-150 relative border bg-MainColor group overflow-hidden flex justify-center items-end">
+                <img src="/imgs/arrivalImg1.png" alt="" />
                 <div className="absolute -bottom-full left-8 w-60 transition-all duration-300 ease-in-out group-hover:bottom-8">
                   <h4 className="font-Inter font-semibold text-[24px] leading-6 text-[#FAFAFA] mb-3">
                     PlayStation 5
@@ -914,7 +541,8 @@ function HomePage() {
                 </div>
               </div>
               <div className="w-1/2 grid gap-8">
-                <div className="w-full h-71 border relative bg-[#0D0D0D] group overflow-hidden">
+                <div className="w-full h-71 border relative bg-[#0D0D0D] group overflow-hidden flex justify-end">
+                  <img src="/imgs/arrivalImg2.png" alt="" />
                   <div className="absolute -bottom-full left-8 w-60 transition-all duration-300 ease-in-out group-hover:bottom-8">
                     <h4 className="font-Inter font-semibold text-[24px] leading-6 text-[#FAFAFA] mb-3">
                       Women’s Collections
@@ -928,7 +556,8 @@ function HomePage() {
                   </div>
                 </div>
                 <div className="flex justify-between gap-8 ">
-                  <div className="w-1/2 h-71 border bg-[#0C0C0C] relative group overflow-hidden">
+                  <div className="w-1/2 h-71 border bg-[#0C0C0C] relative group overflow-hidden flex items-center justify-center">
+                    <img src="/imgs/arrivalImg3.png" alt="" />
                     <div className="absolute -bottom-full left-8 w-60 transition-all duration-300 ease-in-out group-hover:bottom-8">
                       <h4 className="font-Inter font-semibold text-[24px] leading-6 text-[#FAFAFA] mb-3">
                         Speakers
@@ -941,7 +570,8 @@ function HomePage() {
                       </button>
                     </div>
                   </div>
-                  <div className="w-1/2 h-71 border bg-[#0C0C0C] relative group overflow-hidden">
+                  <div className="w-1/2 h-71 border bg-[#0C0C0C] relative group overflow-hidden flex items-center justify-center">
+                    <img src="/imgs/arrivalImg4.png" alt="" />
                     <div className="absolute -bottom-full left-8 w-60 transition-all duration-300 ease-in-out group-hover:bottom-8">
                       <h4 className="font-Inter font-semibold text-[24px] leading-6 text-[#FAFAFA] mb-3">
                         Perfume
@@ -962,25 +592,37 @@ function HomePage() {
         <section className="pb-10">
           <div className="container mx-auto py-5 flex item-center justify-around">
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full border-10 border-[#C1C0C1] bg-MainColor mx-auto mb-5">
-                <img src="" alt="" />
+              <div className="w-18 h-18 flex items-center justify-center rounded-full border-10 border-[#C1C0C1] bg-MainColor mx-auto mb-5">
+                <FaShippingFast className="text-white text-[28px]" />
               </div>
-              <h4 className="font-Poppins font-semibold text-[20px] leading-7 text-MainColor mb-2">FREE AND FAST DELIVERY</h4>
-              <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor">Free delivery for all orders over $140</p>
+              <h4 className="font-Poppins font-semibold text-[20px] leading-7 text-MainColor mb-2">
+                FREE AND FAST DELIVERY
+              </h4>
+              <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor">
+                Free delivery for all orders over $140
+              </p>
             </div>
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full border-10 border-[#C1C0C1] bg-MainColor mx-auto mb-5">
-                <img src="" alt="" />
+              <div className="w-18 h-18 flex items-center justify-center rounded-full border-10 border-[#C1C0C1] bg-MainColor mx-auto mb-5">
+                <RiCustomerService2Fill className="text-white text-[28px]" />
               </div>
-              <h4 className="font-Poppins font-semibold text-[20px] leading-7 text-MainColor mb-2">24/7 CUSTOMER SERVICE</h4>
-              <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor">Friendly 24/7 customer support</p>
+              <h4 className="font-Poppins font-semibold text-[20px] leading-7 text-MainColor mb-2">
+                24/7 CUSTOMER SERVICE
+              </h4>
+              <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor">
+                Friendly 24/7 customer support
+              </p>
             </div>
             <div className="text-center">
-              <div className="w-20 h-20 rounded-full border-10 border-[#C1C0C1] bg-MainColor mx-auto mb-5">
-                <img src="" alt="" />
+              <div className="w-18 h-18 flex items-center justify-center rounded-full border-10 border-[#C1C0C1] bg-MainColor mx-auto mb-5">
+                <LuShieldCheck className="text-white text-[28px]" />
               </div>
-              <h4 className="font-Poppins font-semibold text-[20px] leading-7 text-MainColor mb-2">MONEY BACK GUARANTEE</h4>
-              <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor">We reurn money within 30 days</p>
+              <h4 className="font-Poppins font-semibold text-[20px] leading-7 text-MainColor mb-2">
+                MONEY BACK GUARANTEE
+              </h4>
+              <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor">
+                We reurn money within 30 days
+              </p>
             </div>
           </div>
         </section>
