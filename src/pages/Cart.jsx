@@ -7,34 +7,12 @@ import { baseUrl } from "../services/config";
 import { RiDeleteBin6Line, RiDeleteBinLine } from "react-icons/ri";
 
 function Cart() {
-  const { cart, setCart, delCart } = useContext(DataContext);
+  const {} = useContext(DataContext);
   window.scrollTo({
     top: "0px",
     behavior: "smooth",
   });
 
-  const decrement = (id) => {
-    setCart((data) =>
-      data.map((item) =>
-        item.productId === id
-          ? {
-              ...item,
-              count: item.count > 1 ? item.count - 1 : 1,
-            }
-          : item,
-      ),
-    );
-  };
-
-  const increment = (id) => {
-    setCart((data) =>
-      data.map((item) =>
-        item.productId === id ? { ...item, count: item.count + 1 } : item,
-      ),
-    );
-  };
-
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.count, 0);
   return (
     <>
       <div className="container mx-auto py-10">
@@ -73,75 +51,49 @@ function Cart() {
             </h4>
           </div>
           <div className=" h-[65vh] overflow-y-auto mb-5">
-            {cart?.length > 0 ? (
-              cart?.map((item, i) => {
-                return (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between gap-5 shadow-md py-3 px-5 rounded-sm mb-5"
-                  >
-                    <div className="flex items-center gap-5 w-[25%] ">
-                      <div className="w-14 h-14">
-                        <img
-                          className="w-full h-full "
-                          src={`${baseUrl}${item.img}`}
-                          alt=""
-                        />
-                      </div>
+            <div
+              className="flex items-center justify-between gap-5 shadow-md py-3 px-5 rounded-sm mb-5"
+            >
+              <div className="flex items-center gap-5 w-[25%] ">
+                <div className="w-14 h-14">
+                  <img
+                    className="w-full h-full "
+                    src="/imgs/productImg.png"
+                    alt=""
+                  />
+                </div>
 
-                      <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                        {item?.title?.length > 20
-                          ? item.title.slice(0, 20) + "..."
-                          : item.title}
-                      </h4>
-                    </div>
-                    <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                      {item.price}
-                    </h4>
-                    <div className="flex items-center">
-                      <button
-                        className="border border-[#00000080] rounded-l-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer"
-                        onClick={() => {
-                          decrement(item.productId);
-                        }}
-                      >
-                        <FaMinus />
-                      </button>
-                      <span className="border border-[#00000080] px-4 py-0.5 font-Poppins font-medium text-[20px] text-MainColor">
-                        {item.count}
-                      </span>
-                      <button
-                        className="border border-[#00000080] rounded-r-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer"
-                        onClick={() => {
-                          increment(item.productId);
-                        }}
-                      >
-                        <FaPlus />
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-10">
-                      <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                        {item.price * item.count}
-                      </h4>
-                      <RiDeleteBin6Line
-                        className="text-[#DB4444] text-[20px] cursor-pointer"
-                        onClick={() => {
-                          delCart(item.productId);
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="flex h-full justify-center items-center text-center flex-col gap-5">
-                <img className=" w-110" src="/imgs/empty.gif" alt="" />
-                <h4 className="font-Inter font-semibold text-[20px]">
-                  Hozircha mahsulotlar yo‘q <br />
-                  Iltimos mahsulotlar tanlang
+                <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
+                  Product name
                 </h4>
               </div>
-            )}
+              <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
+                $4548
+              </h4>
+              <div className="flex items-center">
+                <button
+                  className="border border-[#00000080] rounded-l-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer"
+                >
+                  <FaMinus />
+                </button>
+                <span className="border border-[#00000080] px-4 py-0.5 font-Poppins font-medium text-[20px] text-MainColor">
+                  1
+                </span>
+                <button
+                  className="border border-[#00000080] rounded-r-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer"
+                >
+                  <FaPlus />
+                </button>
+              </div>
+              <div className="flex items-center gap-10">
+                <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
+                  $48478
+                </h4>
+                <RiDeleteBin6Line
+                  className="text-[#DB4444] text-[20px] cursor-pointer"
+                />
+              </div>
+            </div>
           </div>
           <div className="flex items-center justify-between mb-15">
             <button className="font-Poppins font-medium text-[16px] leading-6 text-MainColor border border-[#00000080] py-3 px-5 rounded-sm cursor-pointer">
@@ -187,7 +139,7 @@ function Cart() {
                   Subtotal:
                 </h4>
                 <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                  {subtotal}
+                  $6594
                 </h4>
               </div>
               <hr className="border-0.5 border-[#999999]" />
@@ -205,7 +157,7 @@ function Cart() {
                   Total:
                 </h4>
                 <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                  {subtotal}
+                  $6484
                 </h4>
               </div>
               <div className="flex justify-center mt-5">

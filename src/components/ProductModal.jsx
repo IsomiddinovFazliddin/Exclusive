@@ -1,13 +1,14 @@
 import { Button } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { IoArrowForward, IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DataContext } from "../App";
 
 function ProductModal() {
   const { productModal, setProductModal } = useContext(DataContext);
   const [count, setCount] = useState(1);
+
   return (
     <div
       className={`w-full h-screen fixed top-0 left-0 bg-[rgba(0,0,0,0.5)] z-50 flex justify-center items-center transition-all duration-500 ease-in-out ${

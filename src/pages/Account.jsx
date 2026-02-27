@@ -1,13 +1,37 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
+import { userDetail } from "../services";
 
 function Account() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+
+  window.scrollTo({
+    top: "0px",
+    behavior: "smooth",
+  });
+
+  useEffect(() => {
+    userDetail().then((data) => {
+      if (data) {
+        setFirstName(data.first_name || "");
+        setLastName(data.last_name || "");
+        setEmail(data.email_or_phone || "");
+        setAddress(data.address || "");
+      }
+    });
+  }, []);
   return (
     <>
       <div className="container mx-auto">
@@ -89,7 +113,13 @@ function Account() {
             <h2 className="font-Poppins font-medium text-[20px] mb-5 text-[#DB4444]">
               Edit Your Profile
             </h2>
-            <form className="flex flex-wrap gap-5 justify-between" action="">
+            <form
+              className="flex flex-wrap gap-5 justify-between"
+              action=""
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
               <div className="w-[45%] grid gap-2">
                 <label
                   className="font-Poppins font-normal text-MainColor text-[16px]"
@@ -102,6 +132,10 @@ function Account() {
                   type="text"
                   placeholder="Md"
                   required
+                  value={firstName}
+                  onInput={(e) => {
+                    setFirstName(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-[45%] grid gap-2">
@@ -116,6 +150,10 @@ function Account() {
                   type="text"
                   placeholder="Rimel"
                   required
+                  value={lastName}
+                  onInput={(e) => {
+                    setLastName(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-[45%] grid gap-2">
@@ -130,6 +168,27 @@ function Account() {
                   type="email"
                   placeholder="rimel1111@gmail.com"
                   required
+                  value={email}
+                  onInput={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="w-[45%] grid gap-2">
+                <label
+                  className="font-Poppins font-normal text-MainColor text-[16px]"
+                  htmlFor=""
+                >
+                  Phone
+                </label>
+                <input
+                  className="w-full bg-[#F5F5F5] py-2.5 px-3 rounded-sm font-Poppins font-normal text-MainColor text-[16px] outline-none"
+                  type="number"
+                  placeholder="+998"
+                  value={phone}
+                  onInput={(e) => {
+                    setPhone(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-[45%] grid gap-2">
@@ -143,7 +202,10 @@ function Account() {
                   className="w-full bg-[#F5F5F5] py-2.5 px-3 rounded-sm font-Poppins font-normal text-MainColor text-[16px] outline-none"
                   type="text"
                   placeholder="Kingston, 5236, United State"
-                  required
+                  value={address}
+                  onInput={(e) => {
+                    setAddress(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-full grid gap-2">
@@ -157,8 +219,11 @@ function Account() {
                   <input
                     className="w-full bg-[#F5F5F5] py-2.5 px-3 rounded-sm font-Poppins font-normal text-MainColor text-[16px] outline-none"
                     type={showCurrent ? "text" : "password"}
-                    placeholder="Current Passwod"
+                    placeholder="Current Password"
                     required
+                    onInput={(e) => {
+                      setPassword(e.target.value);
+                    }}
                   />
                   {showCurrent ? (
                     <FaRegEyeSlash
@@ -180,8 +245,7 @@ function Account() {
                   <input
                     className="w-full bg-[#F5F5F5] py-2.5 px-3 rounded-sm font-Poppins font-normal text-MainColor text-[16px] outline-none"
                     type={showNew ? "text" : "password"}
-                    placeholder="New Passwod"
-                    required
+                    placeholder="New Password"
                   />
                   {showNew ? (
                     <FaRegEyeSlash
@@ -203,8 +267,7 @@ function Account() {
                   <input
                     className="w-full bg-[#F5F5F5] py-2.5 px-3 rounded-sm font-Poppins font-normal text-MainColor text-[16px] outline-none"
                     type={showConfirm ? "text" : "password"}
-                    placeholder="Confirm New Passwod"
-                    required
+                    placeholder="Confirm New Password"
                   />
                   {showConfirm ? (
                     <FaRegEyeSlash
@@ -231,7 +294,7 @@ function Account() {
                     backgroundColor: "transparent",
                     padding: "10px 30x",
                     color: "#000000",
-                    fontWeight: "500"
+                    fontWeight: "500",
                   }}
                   variant="contained"
                 >

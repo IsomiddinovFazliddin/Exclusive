@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { LuUser } from "react-icons/lu";
@@ -7,6 +7,7 @@ import { RiShoppingCart2Line } from "react-icons/ri";
 import { Link, NavLink } from "react-router-dom";
 import AnimationLogo from "./AnimationLogo";
 import { DataContext } from "../App";
+import { getToken, setToken } from "../services/token";
 
 function Navbar() {
   const { modal, setModal, cart } = useContext(DataContext);
@@ -14,9 +15,6 @@ function Navbar() {
     <nav className="border-b border-[#00000042]">
       <div className="container mx-auto flexStill py-5">
         <AnimationLogo />
-        {/* <h3 className="font-Inter font-bold text-[24px] tracking-[3%] text-MainColor">
-          Exclusive
-        </h3> */}
         <ul className="flex gap-5">
           <NavLink
             className={({ isActive }) =>
@@ -74,14 +72,18 @@ function Navbar() {
               </span>
             )}
           </Link>
-          <button
-            className="w-8 h-8 bg-[#DB4444] flex justify-center items-center rounded-full cursor-pointer"
-            onClick={() => {
-              setModal(!modal);
-            }}
-          >
-            <LuUser className="z-10 text-[18px] text-white" />
-          </button>
+          {getToken() ? (
+            <button
+              className="w-8 h-8 bg-[#DB4444] flex justify-center items-center rounded-full cursor-pointer"
+              onClick={() => {
+                setModal(!modal);
+              }}
+            >
+              <LuUser className="z-10 text-[18px] text-white" />
+            </button>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </nav>

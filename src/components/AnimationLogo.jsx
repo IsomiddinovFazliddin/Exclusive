@@ -32,7 +32,7 @@ function AnimationLogo() {
   return (
     <h1
       ref={textRef}
-      className="text-4xl font-extrabold tracking-widest flex gap-1"
+      className="text-4xl font-extrabold tracking-widest flex gap-1 select-none"
     >
       {text.split("").map((letter, i) => (
         <span

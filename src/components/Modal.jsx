@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { DataContext } from "../App";
 
 function Modal() {
-  const { modal } = useContext(DataContext);
+  const { modal, setModal } = useContext(DataContext);
   return (
     <div
       id="modal"
@@ -23,6 +23,9 @@ function Modal() {
       <Link
         to={"/account"}
         className="flex items-center mb-2.5 gap-2.5 cursor-pointer  p-1  rounded-sm transition-all duration-300 ease-in-out hover:bg-gray-700"
+        onClick={() => {
+          setModal(false);
+        }}
       >
         <LuUser className="text-[20px] text-[#FAFAFA]" />
         <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
@@ -47,7 +50,13 @@ function Modal() {
           My Reviews
         </h4>
       </Link>
-      <Link className="flex items-center mb-2.5 gap-2.5 cursor-pointer p-1  rounded-sm transition-all duration-300 ease-in-out hover:bg-gray-700">
+      <Link
+        className="flex items-center mb-2.5 gap-2.5 cursor-pointer p-1  rounded-sm transition-all duration-300 ease-in-out bg-red-500 hover:bg-red-600"
+        onClick={() => {
+          localStorage.clear();
+          setModal(false);
+        }}
+      >
         <BiLogOut className="text-[20px] text-[#FAFAFA]" />
         <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
           Logout

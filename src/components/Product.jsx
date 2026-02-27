@@ -6,13 +6,13 @@ import { DataContext } from "../App";
 import { baseUrl } from "../services/config";
 
 function Product({ item }) {
-  const { setProductModal, addToCart, addWishlist } = useContext(DataContext);
+  const { setProductModal, addWishlist } = useContext(DataContext);
   const [liked, setLiked] = useState(false);
 
   return (
     <>
       <Link
-        to={"/productdetails"}
+        to={`/productdetails/${item.id}`}
         className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-xl cursor-pointer rounded-sm"
       >
         <div className="imgs w-full h-62.5 px-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
@@ -27,7 +27,7 @@ function Product({ item }) {
               onClick={(e) => {
                 e.preventDefault();
                 setLiked(!liked);
-                addWishlist(item.id)
+                addWishlist(item.id);
               }}
             >
               {liked ? (
@@ -41,6 +41,7 @@ function Product({ item }) {
               onClick={(e) => {
                 e.preventDefault();
                 setProductModal(true);
+                
               }}
             >
               <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
@@ -53,7 +54,6 @@ function Product({ item }) {
             className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0 "
             onClick={(e) => {
               e.preventDefault();
-              addToCart(item.id);
             }}
           >
             Add To Cart

@@ -3,16 +3,29 @@ import React, { useState } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { registerFunction } from "../services";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const [showPassword, setSHowPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  window.scrollTo({
+    top: "0px",
+    behavior: "smooth",
+  });
 
   return (
     <>
       <div className="py-10">
         <div className="container mx-auto flex items-center justify-between gap-10">
           <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]  w-[60%] h-150 bg-[#CBE4E8] rounded-sm">
-            <img src="/imgs/loginImg.png" alt="" />
+            <img className="w-full h-full" src="/imgs/loginImg.png" alt="" />
           </div>
           <div className="w-[40%] pl-10">
             <h2 className="font-Inter font-medium text-[36px] leading-7.5 tracking-[4%] text-MainColor mb-5 ">
@@ -21,14 +34,46 @@ function SignUp() {
             <h4 className="font-Poppins font-normal text-[16px] leading-6  text-MainColor mb-5">
               Enter your details below
             </h4>
-            <form action="" className="grid gap-5 mb-5">
+            <form
+              action=""
+              className="grid gap-5 mb-5"
+              onSubmit={(e) => {
+                e.preventDefault();
+                registerFunction(name, email, password).then((info) => {
+                  console.log(info);
+                  if (
+                    info?.email_or_phone ==
+                    "Bu elektron pochta manzili allaqachon ro'yxatdan o'tgan."
+                  ) {
+                    toast.info("Elektron pochta allaqachon mavjud..", {
+                      pauseOnHover: false,
+                    });
+                  } else if (
+                    info?.message ==
+                    "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tkazildi."
+                  ) {
+                    navigate("/login", {
+                      state: {
+                        message: "Ro'yxatdan muvaffaqiyatli o'tdingiz",
+                      },
+                    });
+                  }
+                });
+              }}
+            >
               <input
+                onInput={(e) => {
+                  setName(e.target.value);
+                }}
                 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor border-b border-[#808080] pb-1 outline-none"
                 type="text"
                 placeholder="Name"
                 required
               />
               <input
+                onInput={(e) => {
+                  setEmail(e.target.value);
+                }}
                 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor border-b border-[#808080] pb-1 outline-none"
                 type="email"
                 placeholder="Email or Phone Number"
@@ -36,6 +81,9 @@ function SignUp() {
               />
               <div className="relative">
                 <input
+                  onInput={(e) => {
+                    setPassword(e.target.value);
+                  }}
                   className="w-full font-Poppins font-normal text-[16px] leading-6 text-MainColor border-b border-[#808080] pb-1 outline-none"
                   placeholder="Password"
                   required
@@ -79,9 +127,12 @@ function SignUp() {
               <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
                 Already have account?
               </h5>
-              <span className="font-Poppins font-medium text-[16px] leading-6 text-MainColor border-b border-[#4D4D4D] cursor-pointer">
+              <Link
+                to={"/login"}
+                className="font-Poppins font-medium text-[16px] leading-6 text-MainColor border-b border-[#4D4D4D] cursor-pointer"
+              >
                 Log in
-              </span>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
-import React, { useState } from "react";
+import { Button, ListItem } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FaHeart,
   FaMinus,
@@ -9,18 +9,36 @@ import {
   FaStar,
 } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
+import { productDetail } from "../services";
+import { baseUrl } from "../services/config";
+import { DataContext } from "../App";
 
 function ProductDetails() {
+  const { id } = useParams();
   const [count, setCount] = useState(1);
   const [liked, setLiked] = useState(false);
+  const [product, setProduct] = useState(null);
   const [mainImg, setMainImg] = useState();
 
-  window.scrollTo({
-    top: "0px",
-    behavior: "smooth",
-  });
+  useEffect(() => {
+    if (product?.pictures?.length > 0) {
+      setMainImg(`${baseUrl}${product?.pictures?.[0].file}`);
+    }
+  }, [product]);
 
+  useEffect(() => {
+    productDetail(id).then((data) => {
+      setProduct(data);
+    });
+  }, [id]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: "0px",
+      behavior: "smooth",
+    });
+  }, []);
   return (
     <>
       <div className="container mx-auto py-10">
@@ -51,45 +69,36 @@ function ProductDetails() {
             Havic HV G-92 Gamepad
           </NavLink>
         </div>
-        <div className="flex justify-between gap-10">
+        <div className="flex justify-between items-start gap-10">
           <div className="flex gap-5">
             <div className="imgs grid gap-5">
-              <div className="w-37.5 h-27.5 bg-[#F5F5F5] p-5 cursor-pointer">
-                <img
-                  className="w-full"
-                  src="/imgs/productDetailImgSmall.png"
-                  alt=""
-                />
-              </div>
-              <div className="w-37.5 h-27.5 bg-[#F5F5F5] p-5 cursor-pointer">
-                <img
-                  className="w-full"
-                  src="/imgs/productDetailImg.png"
-                  alt=""
-                />
-              </div>
-              <div className="w-37.5 h-27.5 bg-[#F5F5F5] p-5 cursor-pointer">
-                <img
-                  className="w-full"
-                  src="/imgs/productDetailImg.png"
-                  alt=""
-                />
-              </div>
-              <div className="w-37.5 h-27.5 bg-[#F5F5F5] p-5 cursor-pointer">
-                <img
-                  className="w-full"
-                  src="/imgs/productDetailImg.png"
-                  alt=""
-                />
-              </div>
+              {product?.pictures?.slice(0, 4).map((item, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="w-42.5 h-33.75 bg-[#F5F5F5] px-5 cursor-pointer"
+                    onClick={() => setMainImg(`${baseUrl}${item.file}`)}
+                  >
+                    <img
+                      className="w-full h-full object-cover"
+                      src={`${baseUrl}${item.file}`}
+                      alt=""
+                    />
+                  </div>
+                );
+              })}
             </div>
-            <div className="img w-115 h-125 bg-[#F5F5F5] flex items-center justify-center p-10">
-              <img className="w-full" src="/imgs/productDetailImg.png" alt="" />
+            <div className="img w-125 h-150 bg-[#F5F5F5] flex items-center justify-center p-10">
+              <img
+                className="w-full h-full object-cover"
+                src={mainImg}
+                alt=""
+              />
             </div>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 w-[40%]">
             <h2 className="font-Inter font-semibold text-[24px] leading-6 tracking-[3%] text-MainColor mb-3">
-              Havic HV G-92 Gamepad
+              {product?.title}
             </h2>
             <div className="flex items-center gap-2 mb-3">
               <div className="flex gap-1">
@@ -100,7 +109,7 @@ function ProductDetails() {
                 <FaStar className="text-[#BFBFBF] text-[15px]" />
               </div>
               <span className="font-Poppins font-normal text-[14px] leading-5 text-[#808080]">
-                (150 Reviews)
+                ({product?.quantity} Reviews)
               </span>
               <span className="font-Poppins font-normal text-[14px] leading-5 text-[#808080]">
                 |
@@ -110,12 +119,10 @@ function ProductDetails() {
               </span>
             </div>
             <h3 className="font-Inter font-normal text-[24px] leading-6 tracking-[3%] text-MainColor mb-3">
-              $192.00
+              {product?.price}
             </h3>
             <p className="font-Poppins font-normal text-[14px] leading-5 text-MainColor mb-4 pr-2 ">
-              PlayStation 5 Controller Skin High quality vinyl with air channel
-              adhesive for easy bubble free install & mess free removal Pressure
-              sensitive.
+              {product?.description}
             </p>
             <hr className="border border-[#808080] mb-4" />
             <div className="flex items-center gap-5 mb-5">
@@ -123,8 +130,15 @@ function ProductDetails() {
                 Colours:
               </h4>
               <div className="flex gap-2">
-                <button className="w-5 h-5 rounded-full bg-[#A0BCE0] cursor-pointer focus:border-3"></button>
-                <button className="w-5 h-5 rounded-full bg-[#E07575] cursor-pointer focus:border-3"></button>
+                {product?.properties?.color?.map((item, i) => {
+                  return (
+                    <button
+                      key={i}
+                      className="w-5 h-5 rounded-full cursor-pointer focus:border-3 focus:border-gray-700"
+                      style={{ backgroundColor: item }}
+                    ></button>
+                  );
+                })}
               </div>
             </div>
             <div className="flex gap-5 items-center mb-5">
@@ -132,21 +146,16 @@ function ProductDetails() {
                 Size:
               </h4>
               <div className="flex gap-2.5">
-                <button className="w-8 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]">
-                  XS
-                </button>
-                <button className="w-8 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]">
-                  S
-                </button>
-                <button className="w-8 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]">
-                  M
-                </button>
-                <button className="w-8 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]">
-                  L
-                </button>
-                <button className="w-8 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]">
-                  XL
-                </button>
+                {product?.properties?.size?.map((item, i) => {
+                  return (
+                    <button
+                      key={i}
+                      className="px-2 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]"
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
               </div>
             </div>
             <div className="flex items-center justify-between gap-2.5 mb-5">
@@ -173,6 +182,7 @@ function ProductDetails() {
               </div>
 
               <Button
+                className="flex w-full"
                 sx={{
                   backgroundColor: "#DB4444",
                   padding: "5.5px 30px",
