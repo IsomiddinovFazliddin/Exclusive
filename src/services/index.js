@@ -18,8 +18,12 @@ export const getCategory = () => {
 };
 
 export const getProducts = () => {
+  const myHeaders = new Headers();
+  getToken() ? myHeaders.append("Authorization", `Bearer ${getToken()}`) : "";
+
   const requestOptions = {
     method: "GET",
+    headers: myHeaders,
     redirect: "follow",
   };
 
@@ -60,23 +64,20 @@ export const registerFunction = (name, email, password) => {
     });
 };
 
-export const loginFunction = (email, password) => {
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-
-  const raw = JSON.stringify({
-    email_or_phone: email,
-    password: password,
-  });
-
-  const requestOptions = {
+export const loginFunction = (email, password) =>
+  fetch(`${baseUrl}user/token/`, {
     method: "POST",
-    headers: myHeaders,
-    body: raw,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email_or_phone: email, password }),
+  }).then((res) => res.json());
+
+export const productDetail = (id) => {
+  const requestOptions = {
+    method: "GET",
     redirect: "follow",
   };
 
-  return fetch(`${baseUrl}user/token/`, requestOptions)
+  return fetch(`${baseUrl}product/detail/?product_id=${id}`, requestOptions)
     .then((response) => response.json())
     .then((result) => {
       return result;
@@ -106,13 +107,44 @@ export const userDetail = () => {
     });
 };
 
-export const productDetail = (id) => {
+export const userUpdate = (
+  firstName,
+  lastName,
+  email,
+  phone,
+  address,
+  password,
+) =>
+  fetch(`${baseUrl}user/update-profile/`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      address,
+      password,
+    }),
+  }).then((res) => res.json());
+
+export const addToLiked = (id) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${getToken()}`);
+
   const requestOptions = {
-    method: "GET",
+    method: "POST",
+    headers: myHeaders,
     redirect: "follow",
   };
 
-  return fetch(`${baseUrl}product/detail/?product_id=${id}`, requestOptions)
+  return fetch(
+    `${baseUrl}action/add-to-wishlist/?product_id=${id}`,
+    requestOptions,
+  )
     .then((response) => response.json())
     .then((result) => {
       return result;

@@ -7,6 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <App />
-    <ToastContainer autoClose={3000} />
+    <ToastContainer autoClose={3000} pauseOnHover/>
   </StrictMode>,
 );

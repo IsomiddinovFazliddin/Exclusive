@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { DataContext } from "../App";
 
 function Modal() {
-  const { modal, setModal } = useContext(DataContext);
+  const { modal, setModal, setTokenTitle } = useContext(DataContext);
   return (
     <div
       id="modal"
@@ -55,6 +55,7 @@ function Modal() {
         onClick={() => {
           localStorage.clear();
           setModal(false);
+          setTokenTitle(null);
         }}
       >
         <BiLogOut className="text-[20px] text-[#FAFAFA]" />

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
-import { userDetail } from "../services";
+import { userDetail, userUpdate } from "../services";
+import { toast } from "react-toastify";
 
 function Account() {
   const [showCurrent, setShowCurrent] = useState(false);
@@ -17,12 +18,11 @@ function Account() {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
 
-  window.scrollTo({
-    top: "0px",
-    behavior: "smooth",
-  });
-
   useEffect(() => {
+    window.scrollTo({
+      top: "0px",
+      behavior: "smooth",
+    });
     userDetail().then((data) => {
       if (data) {
         setFirstName(data.first_name || "");
@@ -118,6 +118,17 @@ function Account() {
               action=""
               onSubmit={(e) => {
                 e.preventDefault();
+                userUpdate(firstName, lastName, email, phone, address, password)
+                  .then((res) => {
+                    if (res?.email) {
+                      toast.error(res.email[0]);
+                    } else {
+                      toast.success("Ma'lumotlar yangilandi");
+                    }
+                  })
+                  .catch(() => {
+                    toast.error("Xatolik yuz berdi");
+                  });
               }}
             >
               <div className="w-[45%] grid gap-2">
@@ -183,7 +194,7 @@ function Account() {
                 </label>
                 <input
                   className="w-full bg-[#F5F5F5] py-2.5 px-3 rounded-sm font-Poppins font-normal text-MainColor text-[16px] outline-none"
-                  type="number"
+                  type="text"
                   placeholder="+998"
                   value={phone}
                   onInput={(e) => {

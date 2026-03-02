@@ -24,6 +24,11 @@ function App() {
   const [productModal, setProductModal] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
   const [productData, setProductData] = useState([]);
+  const [tokenTitle, setTokenTitle] = useState(
+    localStorage.getItem("shopToken")
+      ? localStorage.getItem("shopToken")
+      : null,
+  );
 
   useEffect(() => {
     getCategory().then((data) => {
@@ -33,7 +38,7 @@ function App() {
     getProducts().then((data) => {
       setProductData(data);
     });
-  }, []);
+  }, [tokenTitle]);
 
   return (
     <>
@@ -45,6 +50,9 @@ function App() {
           setProductModal,
           categoryData,
           productData,
+          setProductData,
+          tokenTitle,
+          setTokenTitle,
         }}
       >
         <BrowserRouter>

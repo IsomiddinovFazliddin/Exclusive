@@ -7,8 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginFunction } from "../services";
 import { getToken, setToken } from "../services/token";
+import { DataContext } from "../App";
 
 function Login() {
+  const { setTokenTitle } = useContext(DataContext);
   const [showPassword, setSHowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,15 +53,12 @@ function Login() {
 
                 loginFunction(email, password).then((info) => {
                   if (info?.access) {
-                    toast.success("Siz tizimga kirdingiz.", {
-                      pauseOnHover: false,
-                    });
+                    toast.success("Siz tizimga kirdingiz.");
                     setToken(info?.access);
                     navigate("/");
+                    setTokenTitle(info?.access);
                   } else if (info?.non_field_errors[0]) {
-                    toast.error("Invalid credentials", {
-                      pauseOnHover: false,
-                    });
+                    toast.error("Invalid credentials");
                   }
                 });
                 getToken();

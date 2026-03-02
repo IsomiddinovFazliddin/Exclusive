@@ -4,6 +4,7 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { IoArrowForward, IoClose } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
 import { DataContext } from "../App";
+import { productDetail } from "../services";
 
 function ProductModal() {
   const { productModal, setProductModal } = useContext(DataContext);
@@ -84,7 +85,7 @@ function ProductModal() {
                 </button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-5">
               <h4 className="font-Inter font-normal text-[20px] leading-5 tracking-[3%] text-MainColor">
                 Price:
               </h4>
@@ -92,6 +93,21 @@ function ProductModal() {
                 $1000
               </span>
             </div>
+            <Link to={""}>
+              <Button
+                className="flex items-center gap-3"
+                sx={{
+                  backgroundColor: "#DB4444",
+                  padding: "5.5px 30px",
+                  "&:hover": {
+                    backgroundColor: "#b33636",
+                  },
+                }}
+                variant="contained"
+              >
+                Add To Cart
+              </Button>
+            </Link>
           </div>
         </div>
         <Link to={"/productdetails"}>

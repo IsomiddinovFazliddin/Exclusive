@@ -10,7 +10,7 @@ import { DataContext } from "../App";
 import { getToken, setToken } from "../services/token";
 
 function Navbar() {
-  const { modal, setModal, cart } = useContext(DataContext);
+  const { modal, setModal, cart, tokenTitle } = useContext(DataContext);
   return (
     <nav className="border-b border-[#00000042]">
       <div className="container mx-auto flexStill py-5">
@@ -18,7 +18,7 @@ function Navbar() {
         <ul className="flex gap-5">
           <NavLink
             className={({ isActive }) =>
-              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-MainColor after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
+              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-[#DB4444] after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
             }
             to={"/"}
           >
@@ -26,7 +26,7 @@ function Navbar() {
           </NavLink>
           <NavLink
             className={({ isActive }) =>
-              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-MainColor after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
+              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-[#DB4444] after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
             }
             to={"/contact"}
           >
@@ -34,7 +34,7 @@ function Navbar() {
           </NavLink>
           <NavLink
             className={({ isActive }) =>
-              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-MainColor after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
+              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-[#DB4444] after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
             }
             to={"/about"}
           >
@@ -42,7 +42,7 @@ function Navbar() {
           </NavLink>
           <NavLink
             className={({ isActive }) =>
-              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-MainColor after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
+              `relative after:content-[''] after:absolute  after:h-0.5 after:bg-[#DB4444] after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${isActive ? "after:w-full" : "after:w-0"}`
             }
             to={"/signup"}
           >
@@ -72,7 +72,7 @@ function Navbar() {
               </span>
             )}
           </Link>
-          {getToken() ? (
+          {getToken() || tokenTitle ? (
             <button
               className="w-8 h-8 bg-[#DB4444] flex justify-center items-center rounded-full cursor-pointer"
               onClick={() => {
