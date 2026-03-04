@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { loginFunction } from "../services";
+import { loginFunction, myWishlist } from "../services";
 import { getToken, setToken } from "../services/token";
 import { DataContext } from "../App";
 

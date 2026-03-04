@@ -3,7 +3,6 @@
 
 @import "tailwindcss";
 
-
 @theme {
   --font-Poppins: "Poppins", sans-serif;
   --font-Inter: "Inter", sans-serif;
@@ -35,3 +34,19 @@
 .scrollbar-none {
   scrollbar-width: none;
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+  background: #DB4444;
+  width: 35px !important;
+  height: 35px !important;
+  font-size: 10px !important;
+  border-radius: 50%;
+}
+.swiper-navigation-icon,
+.swiper-navigation-icon {
+  width: 12px !important;
+  font-weight: 600;
+  color: white;
+}
+

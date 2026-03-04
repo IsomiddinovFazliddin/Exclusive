@@ -121,9 +121,9 @@ function Account() {
                 userUpdate(firstName, lastName, email, phone, address, password)
                   .then((res) => {
                     if (res?.email) {
-                      toast.error(res.email[0]);
-                    } else {
                       toast.success("Ma'lumotlar yangilandi");
+                    } else {
+                      toast.error(res.email[0]);
                     }
                   })
                   .catch(() => {

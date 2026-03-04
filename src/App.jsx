@@ -12,10 +12,11 @@ import Account from "./pages/Account";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
-import { getCategory, getProducts } from "./services";
+import { getCategory, getProducts, myWishlist } from "./services";
 import Wishlist from "./pages/Wishlist";
 import CheckOut from "./pages/CheckOut";
 import Error from "./pages/Error";
+import CategoryPage from "./pages/CategoryPage";
 
 export const DataContext = createContext();
 
@@ -29,6 +30,10 @@ function App() {
       ? localStorage.getItem("shopToken")
       : null,
   );
+  const [wishlistData, setWishlistData] = useState([]);
+  const [modalId, setModalId] = useState(null);
+
+  const [categoryTitle, setCategoryTitle] = useState("");
 
   useEffect(() => {
     getCategory().then((data) => {
@@ -38,7 +43,17 @@ function App() {
     getProducts().then((data) => {
       setProductData(data);
     });
+
+    myWishlist().then((data) => {
+      const update = data.map((item) => ({
+        ...item,
+        is_liked: true,
+      }));
+      setWishlistData(update);
+    });
   }, [tokenTitle]);
+
+  console.log(categoryTitle);
 
   return (
     <>
@@ -53,6 +68,12 @@ function App() {
           setProductData,
           tokenTitle,
           setTokenTitle,
+          wishlistData,
+          setWishlistData,
+          modalId,
+          setModalId,
+          categoryTitle,
+          setCategoryTitle,
         }}
       >
         <BrowserRouter>
@@ -70,6 +91,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<CheckOut />} />
+            <Route path="/categorypage" element={<CategoryPage />} />
             <Route path="*" element={<Error />} />
           </Routes>
           <Footer />

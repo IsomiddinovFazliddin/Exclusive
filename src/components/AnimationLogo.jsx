@@ -1,51 +1,56 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { Link } from "react-router-dom";
 
 function AnimationLogo() {
   const textRef = useRef(null);
-  const gradientRef = useRef(null);
   const text = "Exclusive";
 
-  useGSAP(() => {
-    // Harflarga wave effect
-    gsap.to(textRef.current.children, {
-      y: -2,
-      duration: 1,
-      stagger: {
-        each: 0.2,
-        repeat: -1,
-        yoyo: true,
-      },
-      ease: "sine.inOut",
+  useEffect(() => {
+    const letters = textRef.current.children;
+
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
+
+    // Harflarni chiqarish
+    tl.fromTo(
+      letters,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.1,
+        duration: 0.3,
+        ease: "power3.out",
+      }
+    )
+
+    // Kutish
+    .to({}, { duration: 1 })
+
+    // Harflarni o‘chirish (teskari tartibda)
+    .to(letters, {
+      opacity: 0,
+      y: -20,
+      stagger: 0.08,
+      duration: 0.2,
+      ease: "power3.in",
     });
 
-    // Gradient harakatlanishi
-    gsap.to(gradientRef.current, {
-      backgroundPosition: "200% center",
-      duration: 4,
-      repeat: -1,
-      ease: "linear",
-    });
-  });
+  }, []);
 
   return (
-    <h1
-      ref={textRef}
-      className="text-4xl font-extrabold tracking-widest flex gap-1 select-none"
-    >
-      {text.split("").map((letter, i) => (
-        <span
-          key={i}
-          ref={gradientRef}
-          className="inline-block bg-gradient-to-r 
-                     from-blue-500 via-indigo-500 to-cyan-400
-                     bg-[length:200%_200%] bg-clip-text text-transparent"
-        >
-          {letter}
-        </span>
-      ))}
-    </h1>
+    <Link to="/" className="inline-block">
+      <span
+        ref={textRef}
+        className="text-4xl font-bold tracking-widest text-MainColor inline-block"
+      >
+        {text.split("").map((letter, i) => (
+          <span key={i} className="inline-block">
+            {letter}
+          </span>
+        ))}
+      </span>
+    </Link>
   );
 }
 

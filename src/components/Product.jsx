@@ -1,14 +1,35 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../App";
 import { baseUrl } from "../services/config";
-import { addToLiked, productDetail } from "../services";
+import { addToLiked, deletLiked } from "../services";
 
 function Product({ item }) {
-  const { setProductModal, productData, setProductData } =
-    useContext(DataContext);
+  const {
+    setProductModal,
+    productData,
+    setProductData,
+    wishlistData,
+    setWishlistData,
+    modalId,
+    setModalId,
+  } = useContext(DataContext);
+
+  const [index, setIndex] = useState(0);
+  const [isHover, setIsHover] = useState(false);
+
+  useEffect(() => {
+    let interval;
+
+    if (isHover) {
+      interval = setInterval(() => {
+        setIndex((info) => (info == item.pictures.length - 1 ? 0 : info + 1));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isHover, item.pictures.length]);
 
   return (
     <>
@@ -16,10 +37,17 @@ function Product({ item }) {
         to={`/productdetails/${item.id}`}
         className="box w-72.5 pb-2 transition-all duration-300 ease-in-out hover:shadow-md cursor-pointer rounded-sm"
       >
-        <div className="imgs w-full h-62.5 px-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group ">
+        <div
+          className="imgs w-full h-62.5 px-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group"
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => {
+            setIsHover(false);
+            setIndex(0);
+          }}
+        >
           <img
             className="w-full  rounded-"
-            src={`${baseUrl}${item?.pictures[0]}`}
+            src={`${baseUrl}${item?.pictures[index]}`}
             alt=""
           />
           <div className="absolute top-3 -right-full grid gap-2.5 transition-all duration-300 ease-in-out group-hover:right-3">
@@ -27,31 +55,42 @@ function Product({ item }) {
               className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
-                addToLiked(item.id).then(() => {
+
+                const action = item.is_liked
+                  ? deletLiked(item.id)
+                  : addToLiked(item.id);
+
+                action.then(() => {
                   setProductData((info) =>
                     info.map((res) =>
-                      res.id == item.id
+                      res.id === item.id
                         ? { ...res, is_liked: !res.is_liked }
                         : res,
                     ),
                   );
+
+                  if (item.is_liked) {
+                    // remove wishlist
+                    setWishlistData((info) =>
+                      info.filter((el) => el.id !== item.id),
+                    );
+                  } else {
+                    // add to wishlist
+                    setWishlistData((info) => [
+                      ...info,
+                      { ...item, is_liked: true },
+                    ]);
+                  }
                 });
               }}
             >
               {item?.is_liked ? (
                 <FaHeart className="text-[#DB4444] text-[18px]" />
               ) : (
-                <FaRegHeart
-                  className="text-MainColor text-[18px]"
-                />
+                <FaRegHeart className="text-MainColor text-[18px]" />
               )}
             </button>
-            <button
-              className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
+            <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer">
               <MdOutlineRemoveRedEye className="text-MainColor text-[18px]" />
             </button>
           </div>
@@ -62,6 +101,7 @@ function Product({ item }) {
             className="absolute -bottom-full w-full font-Poppins font-medium text-[16px] text-white bg-MainColor py-1.5 px-5 cursor-pointer transition-all duration-300 ease-in-out group-hover:bottom-0 "
             onClick={(e) => {
               e.preventDefault();
+              setModalId(item.id);
               setProductModal(true);
             }}
           >

@@ -27,7 +27,7 @@ function Cart() {
             /
           </span>
           <NavLink
-            to={"/about"}
+            to={"/cart"}
             className={({ isActive }) => {
               `text-[#808080] font-Poppins font-normal text-[14px] cursor-pointer`;
             }}

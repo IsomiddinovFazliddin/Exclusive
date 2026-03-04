@@ -4,11 +4,24 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { IoArrowForward, IoClose } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
 import { DataContext } from "../App";
-import { productDetail } from "../services";
+import { addToCart, productDetail } from "../services";
+import { baseUrl } from "../services/config";
 
 function ProductModal() {
-  const { productModal, setProductModal } = useContext(DataContext);
+  const { productModal, setProductModal, modalId, setModalId } =
+    useContext(DataContext);
   const [count, setCount] = useState(1);
+  const [color, setColor] = useState(null);
+  const [size, setSize] = useState(null);
+  const [modalData, setModalData] = useState(null);
+
+  useEffect(() => {
+    modalId &&
+      productDetail(modalId).then((data) => {
+        setModalData(data);
+      });
+  }, [modalId]);
+  // console.log(modalData);
 
   return (
     <div
@@ -21,20 +34,20 @@ function ProductModal() {
       <div className="w-150 bg-white rounded-lg p-5 relative">
         <div className="flex justify-between gap-10 mb-5">
           <div className="w-[45%] shadow-lg h-70 flex items-center justify-center p-5">
-            <img src="/imgs/productImg.png" alt="" />
+            <img src={`${baseUrl}${modalData?.pictures[0].file}`} alt="" />
           </div>
           <div className="w-[55%]">
             <h2 className="font-Inter font-semibold text-[24px] leading-6 tracking-[3%] text-MainColor mb-3">
-              Product name
+              {modalData?.title.slice(0, 20)}
             </h2>
             <div className="flex items-center gap-5 mb-5">
               <h4 className="font-Inter font-normal text-[20px] leading-5 tracking-[3%] text-MainColor">
                 Color:
               </h4>
               <div className="flex gap-2">
-                <button className="w-8 h-8 rounded-sm bg-[#037F00]"></button>
-                <button className="w-8 h-8 rounded-sm bg-[#FA0201]"></button>
-                <button className="w-8 h-8 rounded-sm bg-[#010101]"></button>
+                <button className="w-8 h-8 rounded-sm bg-[#037F00] focus:border-3"></button>
+                <button className="w-8 h-8 rounded-sm bg-[#FA0201] focus:border-3"></button>
+                <button className="w-8 h-8 rounded-sm bg-[#010101] focus:border-3"></button>
               </div>
             </div>
             <div className="flex gap-5 items-center mb-5">
@@ -90,7 +103,7 @@ function ProductModal() {
                 Price:
               </h4>
               <span className="font-Inter font-medium text-[20px] leading-5 tracking-[3%] text-MainColor">
-                $1000
+                {modalData?.price}
               </span>
             </div>
             <Link to={""}>
@@ -132,6 +145,7 @@ function ProductModal() {
           className="absolute right-2 top-2 text-[#DB4444] text-[20px] cursor-pointer"
           onClick={() => {
             setProductModal(false);
+            setModalId(null);
           }}
         />
       </div>

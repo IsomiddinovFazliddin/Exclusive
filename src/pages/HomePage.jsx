@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -20,18 +20,62 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import Button from "@mui/material/Button";
 import Product from "../components/Product";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LuShieldCheck } from "react-icons/lu";
 import { DataContext } from "../App";
+import Marquee from "react-fast-marquee";
 
 function HomePage() {
-  const { setProductModal, categoryData, productData } =
+  const { setProductModal, categoryData, productData, setCategoryTitle } =
     useContext(DataContext);
   const [visibleData, setVisibleData] = useState({
     flash: 4,
     best: 4,
     our: 8,
   });
+
+  const timer = 10 * 24 * 60 * 60 * 1000;
+
+  const getTargetTime = () => {
+    const now = new Date().getTime();
+    const saved = localStorage.getItem("flashTarget");
+
+    if (saved && now < Number(saved)) {
+      return Number(saved);
+    } else {
+      const newTarget = now + timer;
+      localStorage.setItem("flashTarget", newTarget);
+      return newTarget;
+    }
+  };
+
+  const [targetTime, setTargetTime] = useState(getTargetTime());
+  const [timeLeft, setTimeLeft] = useState(targetTime - new Date().getTime());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const difference = targetTime - now;
+
+      if (difference <= 0) {
+        const newTarget = now + timer;
+        localStorage.setItem("flashTarget", newTarget);
+        setTargetTime(newTarget);
+      } else {
+        setTimeLeft(difference);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [targetTime]);
+
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+  const seconds = Math.floor((timeLeft / 1000) % 60);
+
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="hero mb-15 ">
@@ -40,8 +84,11 @@ function HomePage() {
             {categoryData?.map((item, index) => {
               return (
                 <Link
+                  onClick={() => {
+                    setCategoryTitle(item.title);
+                  }}
                   key={index}
-                  to={""}
+                  to={"/categorypage"}
                   className="flex items-center gap-5 w-full mb-5 p-1 rounded-sm transition-all duration-500 ease-in-out hover:bg-[#F5F5F5] pr-10 group"
                 >
                   <img className="w-8" src={item.image} alt="" />
@@ -68,7 +115,7 @@ function HomePage() {
           >
             <SwiperSlide>
               <div className="flex-1 pt-10 h-85">
-                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-full overflow-hidden">
                   <div className="p-15">
                     <div className="flex gap-4 items-center mb-5">
                       <img className="w-8" src="/imgs/apple.png" alt="" />
@@ -95,7 +142,7 @@ function HomePage() {
             </SwiperSlide>
             <SwiperSlide>
               <div className="flex-1 pt-10 h-85">
-                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-full overflow-hidden">
                   <div className="p-15">
                     <div className="flex gap-4 items-center mb-5">
                       <img className="w-8" src="/imgs/apple.png" alt="" />
@@ -122,7 +169,7 @@ function HomePage() {
             </SwiperSlide>
             <SwiperSlide>
               <div className="flex-1 pt-10 h-85">
-                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-full overflow-hidden">
                   <div className="p-15">
                     <div className="flex gap-4 items-center mb-5">
                       <img className="w-8" src="/imgs/apple.png" alt="" />
@@ -149,7 +196,7 @@ function HomePage() {
             </SwiperSlide>
             <SwiperSlide>
               <div className="flex-1 pt-10 h-85">
-                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-full overflow-hidden">
                   <div className="p-15">
                     <div className="flex gap-4 items-center mb-5">
                       <img className="w-8" src="/imgs/apple.png" alt="" />
@@ -176,7 +223,7 @@ function HomePage() {
             </SwiperSlide>
             <SwiperSlide>
               <div className="flex-1 pt-10 h-85">
-                <div className=" flex items-center justify-between gap-5 bg-MainColor h-fulloverflow-hidden">
+                <div className=" flex items-center justify-between gap-5 bg-MainColor h-full overflow-hidden">
                   <div className="p-15">
                     <div className="flex gap-4 items-center mb-5">
                       <img className="w-8" src="/imgs/apple.png" alt="" />
@@ -225,7 +272,7 @@ function HomePage() {
                       Days
                     </h6>
                     <h2 className="font-Inter font-bold text-[32px] leading-7.5 text-MainColor">
-                      03
+                      {String(days).padStart(2, "0")}
                     </h2>
                   </div>
                   <span className="font-Poppins font-bold text-[20px] text-[#E07575]">
@@ -236,7 +283,7 @@ function HomePage() {
                       Hours
                     </h6>
                     <h2 className="font-Inter font-bold text-[32px] leading-7.5 text-MainColor">
-                      23
+                      {String(hours).padStart(2, "0")}
                     </h2>
                   </div>
                   <span className="font-Poppins font-bold text-[20px] text-[#E07575]">
@@ -247,7 +294,7 @@ function HomePage() {
                       Minutes
                     </h6>
                     <h2 className="font-Inter font-bold text-[32px] leading-7.5 text-MainColor">
-                      19
+                      {String(minutes).padStart(2, "0")}
                     </h2>
                   </div>
                   <span className="font-Poppins font-bold text-[20px] text-[#E07575]">
@@ -258,7 +305,7 @@ function HomePage() {
                       Seconds
                     </h6>
                     <h2 className="font-Inter font-bold text-[32px] leading-7.5 text-MainColor">
-                      56
+                      {String(seconds).padStart(2, "0")}
                     </h2>
                   </div>
                 </div>
@@ -327,24 +374,30 @@ function HomePage() {
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-between py-8">
-              {categoryData?.map((item, i) => {
-                return (
+            <div className="overflow-hidden py-8">
+              <Marquee speed={60} gradient={false} pauseOnHover={true}>
+                {[...categoryData, ...categoryData].map((item, i) => (
                   <div
                     key={i}
-                    className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm transition-all duration-500 ease-in-out hover:bg-[#DB4444] group"
+                    className="w-[18vw] flex items-center justify-center"
                   >
-                    <img
-                      className="mx-auto w-14 h-14 mb-2"
-                      src={item.image}
-                      alt=""
-                    />
-                    <h4 className="font-Poppins font-normal text-[16px] text-MainColor text-center transition-all duration-500 ease-in-out group-hover:text-[#FAFAFA]">
-                      {item.title}
-                    </h4>
+                    <div
+                      className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm hover:bg-[#DB4444] group transition-all duration-500"
+                      onClick={() => {
+                        setCategoryTitle(item.title);
+                        navigate("/categorypage")
+                      }}
+                    >
+                      <img
+                        className="mx-auto w-14 h-14 mb-2"
+                        src={item.image}
+                        alt=""
+                      />
+                      <h4 className="text-center">{item.title}</h4>
+                    </div>
                   </div>
-                );
-              })}
+                ))}
+              </Marquee>
             </div>
           </div>
         </section>
