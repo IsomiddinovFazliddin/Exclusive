@@ -1,8 +1,20 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { DataContext } from "../App";
+import { baseUrl } from "../services/config";
+import { toast } from "react-toastify";
+import { cartItem } from "../services";
 
 function CheckOut() {
+  const { cartData, setCartData } = useContext(DataContext);
+
+  const subtotal = cartData?.cart_items?.reduce((sum, item) => {
+    return sum + item.price * item.quantity;
+  }, 0);
+
+  console.log(cartData);
+
   return (
     <>
       <div className="container mx-auto py-10">
@@ -56,7 +68,15 @@ function CheckOut() {
           Billing Details
         </h2>
         <div className="flex gap-20 py-5 justify-between">
-          <form action="" className="w-[40%]" id="myForm">
+          <form
+            action=""
+            className="w-[40%]"
+            id="myForm"
+            onSubmit={(e) => {
+              e.preventDefault();
+              toast.success("Buyurtma berildi");
+            }}
+          >
             <label
               className="font-Poppins font-normal text-[16px] text-[#999999] mb-2 flex"
               htmlFor=""
@@ -66,6 +86,7 @@ function CheckOut() {
             <input
               className="w-full bg-[#F5F5F5] font-Poppins font-normal text-[16px] py-2 px-4 rounded-sm outline-none text-MainColor mb-5"
               type="text"
+              required
             />
             <label
               className="font-Poppins font-normal text-[16px] text-[#999999] mb-2 flex"
@@ -76,6 +97,7 @@ function CheckOut() {
             <input
               className="w-full bg-[#F5F5F5] font-Poppins font-normal text-[16px] py-2 px-4 rounded-sm outline-none text-MainColor mb-5"
               type="text"
+              required
             />
             <label
               className="font-Poppins font-normal text-[16px] text-[#999999] mb-2 flex"
@@ -86,6 +108,7 @@ function CheckOut() {
             <input
               className="w-full bg-[#F5F5F5] font-Poppins font-normal text-[16px] py-2 px-4 rounded-sm outline-none text-MainColor mb-5"
               type="text"
+              required
             />
             <label
               className="font-Poppins font-normal text-[16px] text-[#999999] mb-2 flex"
@@ -116,6 +139,7 @@ function CheckOut() {
             <input
               className="w-full bg-[#F5F5F5] font-Poppins font-normal text-[16px] py-2 px-4 rounded-sm outline-none text-MainColor mb-5"
               type="number"
+              required
             />
             <label
               className="font-Poppins font-normal text-[16px] text-[#999999] mb-2 flex"
@@ -126,6 +150,7 @@ function CheckOut() {
             <input
               className="w-full bg-[#F5F5F5] font-Poppins font-normal text-[16px] py-2 px-4 rounded-sm outline-none text-MainColor mb-5"
               type="email"
+              required
             />
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -171,81 +196,50 @@ function CheckOut() {
           </form>
           <div className="w-[40%] ">
             <div className="h-[30vh] overflow-y-auto mb-5 scrollbar-none">
-              <div className="flex items-center justify-between mb-5 shadow-md">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14">
-                    <img
-                      className="w-full h-full"
-                      src="/imgs/productImg.png"
-                      alt=""
-                    />
-                  </div>
-                  <h5 className="font-Poppins font-normal text-[16px] text-MainColor">
-                    LCD Monitor
-                  </h5>
+              {cartData?.cart_items?.length > 0 ? (
+                cartData?.cart_items?.map((item, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between mb-5 shadow-md"
+                    >
+                      <div className="flex items-center gap-5">
+                        <div className="w-14 h-14">
+                          <img
+                            className="w-full h-full"
+                            src={`${baseUrl}${item?.pictures?.[0].file}`}
+                            alt=""
+                          />
+                        </div>
+                        <h5 className="font-Poppins font-normal text-[16px] text-MainColor">
+                          {item?.title.slice(0, 24)}
+                        </h5>
+                      </div>
+                      <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
+                        {item?.price * item?.quantity}
+                      </h4>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="flex items-center justify-center h-full flex-col">
+                  <img
+                    className="h-[90%]"
+                    src="https://cdn.dribbble.com/userupload/32744211/file/original-888ecc665e715aa9433dcc0e35c0078c.gif"
+                    alt=""
+                  />
+                  <h2 className="font-Poppins font-medium text-[14px]">
+                    Mahsulot mavjud emas
+                  </h2>
                 </div>
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
-                  $650
-                </h4>
-              </div>
-              <div className="flex items-center justify-between mb-5 shadow-md">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14">
-                    <img
-                      className="w-full h-full"
-                      src="/imgs/productImg.png"
-                      alt=""
-                    />
-                  </div>
-                  <h5 className="font-Poppins font-normal text-[16px] text-MainColor">
-                    LCD Monitor
-                  </h5>
-                </div>
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
-                  $650
-                </h4>
-              </div>
-              <div className="flex items-center justify-between mb-5 shadow-md">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14">
-                    <img
-                      className="w-full h-full"
-                      src="/imgs/productImg.png"
-                      alt=""
-                    />
-                  </div>
-                  <h5 className="font-Poppins font-normal text-[16px] text-MainColor">
-                    LCD Monitor
-                  </h5>
-                </div>
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
-                  $650
-                </h4>
-              </div>
-              <div className="flex items-center justify-between mb-5 shadow-md">
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14">
-                    <img
-                      className="w-full h-full"
-                      src="/imgs/productImg.png"
-                      alt=""
-                    />
-                  </div>
-                  <h5 className="font-Poppins font-normal text-[16px] text-MainColor">
-                    LCD Monitor
-                  </h5>
-                </div>
-                <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
-                  $650
-                </h4>
-              </div>
+              )}
             </div>
             <div className="pb-4 border-b-2 border-[#999999] flex justify-between mb-4">
               <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
                 Subtotal:
               </h4>
               <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
-                $1750
+                {subtotal}
               </h4>
             </div>
             <div className="pb-4 border-b-2 border-[#999999] flex justify-between mb-4">
@@ -261,7 +255,7 @@ function CheckOut() {
                 Total:
               </h4>
               <h4 className="font-Poppins font-normal text-[16px] text-MainColor">
-                $1750
+                {subtotal}
               </h4>
             </div>
             <div className="flex justify-between items-start mb-5">

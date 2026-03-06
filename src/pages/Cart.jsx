@@ -1,17 +1,22 @@
 import { Button } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { Link, NavLink } from "react-router-dom";
 import { DataContext } from "../App";
 import { baseUrl } from "../services/config";
 import { RiDeleteBin6Line, RiDeleteBinLine } from "react-icons/ri";
+import { deletCart } from "../services";
+import { toast } from "react-toastify";
 
 function Cart() {
-  const {} = useContext(DataContext);
-  window.scrollTo({
-    top: "0px",
-    behavior: "smooth",
-  });
+  const { tokenTitle, cartData, refreshCart, count, setCount } =
+    useContext(DataContext);
+  useEffect(() => {
+    window.scrollTo({
+      top: "0px",
+      behavior: "smooth",
+    });
+  }, []);
 
   return (
     <>
@@ -51,49 +56,70 @@ function Cart() {
             </h4>
           </div>
           <div className=" h-[65vh] overflow-y-auto mb-5">
-            <div
-              className="flex items-center justify-between gap-5 shadow-md py-3 px-5 rounded-sm mb-5"
-            >
-              <div className="flex items-center gap-5 w-[25%] ">
-                <div className="w-14 h-14">
-                  <img
-                    className="w-full h-full "
-                    src="/imgs/productImg.png"
-                    alt=""
-                  />
-                </div>
+            {cartData?.cart_items?.length > 0 ? (
+              cartData?.cart_items?.map((item, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between gap-5 shadow-md py-3 px-5 rounded-sm mb-5"
+                  >
+                    <div className="flex items-center gap-5 w-[25%] ">
+                      <div className="w-14 h-14">
+                        <img
+                          className="w-full h-full object-cover"
+                          src={`${baseUrl}${item?.pictures?.[0].file}`}
+                          alt=""
+                        />
+                      </div>
 
-                <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                  Product name
-                </h4>
-              </div>
-              <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                $4548
-              </h4>
-              <div className="flex items-center">
-                <button
-                  className="border border-[#00000080] rounded-l-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer"
-                >
-                  <FaMinus />
-                </button>
-                <span className="border border-[#00000080] px-4 py-0.5 font-Poppins font-medium text-[20px] text-MainColor">
-                  1
-                </span>
-                <button
-                  className="border border-[#00000080] rounded-r-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer"
-                >
-                  <FaPlus />
-                </button>
-              </div>
-              <div className="flex items-center gap-10">
-                <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                  $48478
-                </h4>
-                <RiDeleteBin6Line
-                  className="text-[#DB4444] text-[20px] cursor-pointer"
+                      <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
+                        {item?.title.slice(0, 26)}
+                      </h4>
+                    </div>
+                    <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
+                      {item?.price}
+                    </h4>
+                    <div className="flex items-center">
+                      <button className="border border-[#00000080] rounded-l-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer">
+                        <FaMinus />
+                      </button>
+                      <span className="border border-[#00000080] px-4 py-0.5 font-Poppins font-medium text-[20px] text-MainColor">
+                        {item?.quantity}
+                      </span>
+                      <button className="border border-[#00000080] rounded-r-sm p-2.25 transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] cursor-pointer">
+                        <FaPlus />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-10">
+                      <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
+                        {item?.quantity * item?.price}
+                      </h4>
+                      <RiDeleteBin6Line
+                        className="text-[#DB4444] text-[20px] cursor-pointer"
+                        onClick={() => {
+                          deletCart(item.id).then(() => {
+                            refreshCart();
+                          });
+                          toast.success("Mahsulot o'chirib tashlandi");
+                          re;
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="flex items-center justify-center h-full flex-col">
+                <img
+                  className="h-[90%]"
+                  src="https://cdn.dribbble.com/userupload/32744211/file/original-888ecc665e715aa9433dcc0e35c0078c.gif"
+                  alt=""
                 />
+                <h2 className="font-Poppins font-medium text-[18px]">
+                  Mahsulot mavjud emas
+                </h2>
               </div>
-            </div>
+            )}
           </div>
           <div className="flex items-center justify-between mb-15">
             <button className="font-Poppins font-medium text-[16px] leading-6 text-MainColor border border-[#00000080] py-3 px-5 rounded-sm cursor-pointer">
@@ -139,7 +165,7 @@ function Cart() {
                   Subtotal:
                 </h4>
                 <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                  $6594
+                  {cartData?.total_price}
                 </h4>
               </div>
               <hr className="border-0.5 border-[#999999]" />
@@ -157,7 +183,7 @@ function Cart() {
                   Total:
                 </h4>
                 <h4 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor">
-                  $6484
+                  {cartData?.total_price}
                 </h4>
               </div>
               <div className="flex justify-center mt-5">

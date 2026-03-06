@@ -188,18 +188,41 @@ export const deletLiked = (id) => {
     });
 };
 
-export const addToCart = () => {
+export const categoryFilter = (id) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${getToken()}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  return fetch(`${baseUrl}product/list/?category_id=${id}`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+export const addToCart = (modalId, count, color, size) => {
+  console.log(modalId, count, color, size);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", `Bearer ${getToken()}`);
 
+  const properties = {};
+
+  if (color) properties.color = color;
+  if (size) properties.size = size;
+
   const raw = JSON.stringify({
-    product_id: 1,
-    quantity: 2,
-    properties: {
-      color: "black",
-      size: "XL",
-    },
+    product_id: modalId,
+    quantity: count,
+    properties: properties,
   });
 
   const requestOptions = {
@@ -210,6 +233,49 @@ export const addToCart = () => {
   };
 
   return fetch(`${baseUrl}order/add-to-cart/`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+export const cartItem = () => {
+  const myHeaders = new Headers();
+  getToken() ? myHeaders.append("Authorization", `Bearer ${getToken()}`) : null;
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  return fetch(`${baseUrl}order/cart-items/`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+export const deletCart = (id) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${getToken()}`);
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  return fetch(
+    `${baseUrl}order/remove-from-cart?cart_item_id=${id}`,
+    requestOptions,
+  )
     .then((response) => response.json())
     .then((result) => {
       return result;

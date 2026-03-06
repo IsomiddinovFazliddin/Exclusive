@@ -25,7 +25,7 @@ function Wishlist() {
           <div className="container mx-auto py-10">
             <div className="flex items-center justify-between">
               <h3 className="font-Poppins font-medium text-[20px] text-MainColor">
-                Wishlist (<span>4</span>)
+                Wishlist (<span>{wishlistData?.length}</span>)
               </h3>
               <button
                 className="font-Poppins font-medium text-[16px] text-MainColor border border-[#00000080] rounded-sm py-3 px-8 cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:border-[#DB4444] hover:text-white"

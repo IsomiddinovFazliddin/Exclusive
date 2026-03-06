@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Modal from "./components/Modal";
 import HomePage from "./pages/HomePage";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -12,11 +11,19 @@ import Account from "./pages/Account";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
-import { getCategory, getProducts, myWishlist } from "./services";
+import {
+  addToCart,
+  cartItem,
+  categoryFilter,
+  getCategory,
+  getProducts,
+  myWishlist,
+} from "./services";
 import Wishlist from "./pages/Wishlist";
 import CheckOut from "./pages/CheckOut";
 import Error from "./pages/Error";
 import CategoryPage from "./pages/CategoryPage";
+import Search from "./pages/Search";
 
 export const DataContext = createContext();
 
@@ -34,6 +41,8 @@ function App() {
   const [modalId, setModalId] = useState(null);
 
   const [categoryTitle, setCategoryTitle] = useState("");
+  const [cartData, setCartData] = useState(null);
+  const [count, setCount] = useState(1);
 
   useEffect(() => {
     getCategory().then((data) => {
@@ -51,9 +60,17 @@ function App() {
       }));
       setWishlistData(update);
     });
+
+    cartItem().then((data) => {
+      setCartData(data);
+    });
   }, [tokenTitle]);
 
-  console.log(categoryTitle);
+  const refreshCart = () => {
+    cartItem().then((data) => {
+      setCartData(data);
+    });
+  };
 
   return (
     <>
@@ -74,11 +91,14 @@ function App() {
           setModalId,
           categoryTitle,
           setCategoryTitle,
+          cartData,
+          count,
+          setCount,
+          refreshCart,
         }}
       >
         <BrowserRouter>
           <ProductModal />
-          <Modal />
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -91,7 +111,8 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<CheckOut />} />
-            <Route path="/categorypage" element={<CategoryPage />} />
+            <Route path="/categorypage/:id" element={<CategoryPage />} />
+            <Route path="/search" element={<Search />} />
             <Route path="*" element={<Error />} />
           </Routes>
           <Footer />

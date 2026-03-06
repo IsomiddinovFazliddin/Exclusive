@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaRegStar } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { LuUser } from "react-icons/lu";
 import { RiShoppingCart2Line } from "react-icons/ri";
@@ -10,18 +10,38 @@ import { DataContext } from "../App";
 import { getToken, setToken } from "../services/token";
 import Product from "./Product";
 import { baseUrl } from "../services/config";
+import { MdLocalMall, MdOutlineCancel } from "react-icons/md";
+import { BiLogOut } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 function Navbar() {
-  const { modal, setModal, cart, tokenTitle, wishlistData, productData } =
-    useContext(DataContext);
+  const {
+    modal,
+    setModal,
+    cart,
+    tokenTitle,
+    wishlistData,
+    productData,
+    cartData,
+    setTokenTitle,
+    setWishlistData,
+  } = useContext(DataContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const searchRef = useRef(null);
+  const userModalRef = useRef(null);
 
   useEffect(() => {
     function handleClick(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setModalOpen(false);
+      }
+
+      if (
+        userModalRef.current &&
+        !userModalRef.current.contains(event.target)
+      ) {
+        setModal(false);
       }
     }
     document.addEventListener("mousedown", handleClick);
@@ -31,8 +51,10 @@ function Navbar() {
   }, []);
 
   const filterProduct = productData?.filter((item) => {
-    return item.title.toLowerCase().includes(search.toLowerCase() || "");
+    return item?.title?.toLowerCase()?.includes(search.toLowerCase() || "");
   });
+
+  const navigate = useNavigate();
 
   return (
     <nav className="border-b border-[#00000042]">
@@ -73,7 +95,17 @@ function Navbar() {
           </NavLink>
         </ul>
         <div className="flexStill justify-center gap-5">
-          <form action="" ref={searchRef} className="relative w-100 ">
+          <form
+            action=""
+            ref={searchRef}
+            className="relative w-100 "
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate("/search");
+              setSearch("");
+              setModalOpen(false);
+            }}
+          >
             <input
               value={search}
               onInput={(e) => {
@@ -130,20 +162,79 @@ function Navbar() {
           </Link>
           <Link to={"/cart"} className="relative">
             <RiShoppingCart2Line className="text-MainColor text-[20px] cursor-pointer" />
-            {cart?.length > 0 && (
+            {cartData?.cart_items?.length > 0 && (
               <span className="w-3 h-3 flex items-center justify-center font-Poppins font-semibold text-white text-[9px] leading-0 bg-red-600 rounded-full absolute -top-0.5 -right-1">
-                {cart?.length}
+                {cartData?.cart_items?.length}
               </span>
             )}
           </Link>
           {getToken() || tokenTitle ? (
             <button
-              className="w-8 h-8 bg-[#DB4444] flex justify-center items-center rounded-full cursor-pointer"
-              onClick={() => {
+              ref={userModalRef}
+              className="w-8 h-8 bg-[#DB4444] flex justify-center items-center rounded-full cursor-pointer relative"
+              onClick={(e) => {
+                e.preventDefault();
                 setModal(!modal);
               }}
             >
               <LuUser className="z-10 text-[18px] text-white" />
+              <div
+                id="modal"
+                className={`absolute w-56 p-5 rounded-sm z-40 bg-[#1D1D1D] right-0 top-10 text-[#FAFAFA] transition-all duration-300 ease-in-out ${
+                  modal
+                    ? "opacity-100 scale-100 pointer-events-auto"
+                    : "opacity-0 scale-0 pointer-events-none"
+                } `}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <Link
+                  to={"/account"}
+                  className="flex items-center mb-2.5 gap-2.5 cursor-pointer  p-1  rounded-sm transition-all duration-300 ease-in-out hover:bg-gray-700"
+                  onClick={() => {
+                    setModal(false);
+                  }}
+                >
+                  <LuUser className="text-[20px] text-[#FAFAFA]" />
+                  <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
+                    Manage My Account
+                  </h4>
+                </Link>
+                <Link className="flex items-center mb-2.5 gap-2.5 cursor-pointer  p-1 rounded-sm transition-all duration-300 ease-in-out hover:bg-gray-700">
+                  <MdLocalMall className="text-[20px] text-[#FAFAFA]" />
+                  <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
+                    My Order
+                  </h4>
+                </Link>
+                <Link className="flex items-center mb-2.5 gap-2.5 cursor-pointer p-1 rounded-sm transition-all duration-300 ease-in-out hover:bg-gray-700">
+                  <MdOutlineCancel className="text-[20px] text-[#FAFAFA]" />
+                  <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
+                    My Cancellations
+                  </h4>
+                </Link>
+                <Link className="flex items-center mb-2.5 gap-2.5 cursor-pointer p-1 rounded-sm transition-all duration-300 ease-in-out hover:bg-gray-700">
+                  <FaRegStar className="text-[20px] text-[#FAFAFA]" />
+                  <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
+                    My Reviews
+                  </h4>
+                </Link>
+                <Link
+                  className="flex items-center mb-2.5 gap-2.5 cursor-pointer p-1  rounded-sm transition-all duration-300 ease-in-out bg-red-500 hover:bg-red-600"
+                  onClick={() => {
+                    localStorage.clear();
+                    setModal(false);
+                    setTokenTitle(null);
+                    setWishlistData(null);
+                    toast.info("Siz tizimdan chiqdingiz")
+                  }}
+                >
+                  <BiLogOut className="text-[20px] text-[#FAFAFA]" />
+                  <h4 className="font-Poppins font-normal text-[14px] text-[#FAFAFA]">
+                    Logout
+                  </h4>
+                </Link>
+              </div>
             </button>
           ) : (
             ""

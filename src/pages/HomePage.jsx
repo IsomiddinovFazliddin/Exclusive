@@ -24,6 +24,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { LuShieldCheck } from "react-icons/lu";
 import { DataContext } from "../App";
 import Marquee from "react-fast-marquee";
+import { Avatar, Box, Grid, Skeleton, Typography } from "@mui/material";
+import { categoryFilter } from "../services";
 
 function HomePage() {
   const { setProductModal, categoryData, productData, setCategoryTitle } =
@@ -81,23 +83,42 @@ function HomePage() {
       <div className="hero mb-15 ">
         <div className="container mx-auto flexStill items-start gap-10">
           <div className=" border-r border-[#00000042] pt-10 pr-2">
-            {categoryData?.map((item, index) => {
-              return (
-                <Link
-                  onClick={() => {
-                    setCategoryTitle(item.title);
-                  }}
-                  key={index}
-                  to={"/categorypage"}
-                  className="flex items-center gap-5 w-full mb-5 p-1 rounded-sm transition-all duration-500 ease-in-out hover:bg-[#F5F5F5] pr-10 group"
-                >
-                  <img className="w-8" src={item.image} alt="" />
-                  <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor flex items-center gap-3  cursor-pointer transition-all duration-500 ease-in-out group-hover:text-[#DB4444]">
-                    {item.title} <IoIosArrowForward />
-                  </h5>
-                </Link>
-              );
-            })}
+            {categoryData?.length > 0
+              ? categoryData?.map((item, index) => {
+                  return (
+                    <Link
+                      onClick={() => {
+                        setCategoryTitle(item.title);
+                      }}
+                      key={index}
+                      to={`/categorypage/${item.id}`}
+                      className="flex items-center gap-5 w-full mb-5 p-1 rounded-sm transition-all duration-500 ease-in-out hover:bg-[#F5F5F5] pr-10 group"
+                    >
+                      <img className="w-8" src={item.image} alt="" />
+                      <h5 className="font-Poppins font-normal text-[16px] leading-6 text-MainColor flex items-center gap-3  cursor-pointer transition-all duration-500 ease-in-out group-hover:text-[#DB4444]">
+                        {item.title} <IoIosArrowForward />
+                      </h5>
+                    </Link>
+                  );
+                })
+              : [1, 1, 1, 1, 1].map((item, i) => {
+                  return (
+                    <Box
+                      key={i}
+                      sx={{ width: 300 }}
+                      className="flex gap-3 items-center mb-5"
+                    >
+                      <Skeleton variant="circular">
+                        <Avatar />
+                      </Skeleton>
+                      <Skeleton
+                        animation="wave"
+                        className="w-50 rounded-sm"
+                        variant="caption"
+                      />
+                    </Box>
+                  );
+                })}
           </div>
           <Swiper
             spaceBetween={30}
@@ -320,9 +341,26 @@ function HomePage() {
               </div>
             </div>
             <div className="card flex items-center gap-7.5 flex-wrap py-8 justify-between">
-              {productData?.slice(0, visibleData.flash).map((item) => {
-                return <Product key={item.id} item={item} />;
-              })}
+              {productData?.length > 0
+                ? productData?.slice(0, visibleData.flash).map((item) => {
+                    return <Product key={item.id} item={item} />;
+                  })
+                : [1, 1, 1, 1].map((item, i) => {
+                    return (
+                      <Box key={i} sx={{ width: 290 }}>
+                        <Skeleton
+                          sx={{ bgcolor: "grey.900" }}
+                          variant="rectangular"
+                          width={290}
+                          height={290}
+                          button={50}
+                        />
+                        <Skeleton animation="wave" className="w-72.5" />
+                        <Skeleton animation="wave" className="w-50" />
+                        <Skeleton animation="wave" className="w-40" />
+                      </Box>
+                    );
+                  })}
             </div>
             <div className="flex justify-center">
               <Button
@@ -374,30 +412,47 @@ function HomePage() {
                 </button>
               </div>
             </div>
-            <div className="overflow-hidden py-8">
-              <Marquee speed={60} gradient={false} pauseOnHover={true}>
-                {[...categoryData, ...categoryData].map((item, i) => (
-                  <div
-                    key={i}
-                    className="w-[18vw] flex items-center justify-center"
-                  >
+            <div className="overflow-hidden py-8 flex justify-between">
+              {categoryData?.length > 0 ? (
+                <Marquee speed={60} gradient={false} pauseOnHover={true}>
+                  {[...categoryData, ...categoryData].map((item, i) => (
                     <div
-                      className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm hover:bg-[#DB4444] group transition-all duration-500"
-                      onClick={() => {
-                        setCategoryTitle(item.title);
-                        navigate("/categorypage")
-                      }}
+                      key={i}
+                      className="w-[18vw] flex items-center justify-center"
                     >
-                      <img
-                        className="mx-auto w-14 h-14 mb-2"
-                        src={item.image}
-                        alt=""
-                      />
-                      <h4 className="text-center">{item.title}</h4>
+                      <div
+                        className="w-42.5 h-36.5 content-center border border-[#0000004D] rounded-sm hover:bg-[#DB4444] group transition-all duration-500"
+                        onClick={() => {
+                          setCategoryTitle(item.title);
+                          navigate("/categorypage");
+                        }}
+                      >
+                        <img
+                          className="mx-auto w-14 h-14 mb-2"
+                          src={item.image}
+                          alt=""
+                        />
+                        <h4 className="text-center transition-all duration-500 group-hover:text-white">
+                          {item.title}
+                        </h4>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </Marquee>
+                  ))}
+                </Marquee>
+              ) : (
+                [1, 1, 1, 1, 1].map((item, i) => {
+                  return (
+                    <Box key={i} sx={{ width: 170 }}>
+                      <Skeleton
+                        sx={{ bgcolor: "grey.900" }}
+                        variant="rectangular"
+                        width={170}
+                        height={146}
+                      />
+                    </Box>
+                  );
+                })
+              )}
             </div>
           </div>
         </section>
@@ -442,9 +497,26 @@ function HomePage() {
               </div>
             </div>
             <div className="card flex items-center gap-7.5 flex-wrap py-8 justify-between">
-              {productData?.slice(0, visibleData.best).map((item) => {
-                return <Product key={item.id} item={item} />;
-              })}
+              {productData?.length > 0
+                ? productData?.slice(0, visibleData.best).map((item) => {
+                    return <Product key={item.id} item={item} />;
+                  })
+                : [1, 1, 1, 1].map((item, i) => {
+                    return (
+                      <Box key={i} sx={{ width: 290 }}>
+                        <Skeleton
+                          sx={{ bgcolor: "grey.900" }}
+                          variant="rectangular"
+                          width={290}
+                          height={290}
+                          button={50}
+                        />
+                        <Skeleton animation="wave" className="w-72.5" />
+                        <Skeleton animation="wave" className="w-50" />
+                        <Skeleton animation="wave" className="w-40" />
+                      </Box>
+                    );
+                  })}
             </div>
           </div>
         </section>
@@ -534,9 +606,26 @@ function HomePage() {
               </div>
             </div>
             <div className="card flex items-center gap-7.5 flex-wrap py-8 justify-between">
-              {productData?.slice(0, visibleData.our).map((item) => {
-                return <Product key={item.id} item={item} />;
-              })}
+              {productData?.length > 0
+                ? productData?.slice(0, visibleData.our).map((item) => {
+                    return <Product key={item.id} item={item} />;
+                  })
+                : [1, 1, 1, 1, 1, 1, 1, 1].map((item, i) => {
+                    return (
+                      <Box key={i} sx={{ width: 290 }}>
+                        <Skeleton
+                          sx={{ bgcolor: "grey.900" }}
+                          variant="rectangular"
+                          width={290}
+                          height={290}
+                          button={50}
+                        />
+                        <Skeleton animation="wave" className="w-72.5" />
+                        <Skeleton animation="wave" className="w-50" />
+                        <Skeleton animation="wave" className="w-40" />
+                      </Box>
+                    );
+                  })}
             </div>
             <div className="flex justify-center">
               <Button

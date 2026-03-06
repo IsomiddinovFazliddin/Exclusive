@@ -1,20 +1,24 @@
-import React, { useContext, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
 import Product from "../components/Product";
 import { DataContext } from "../App";
-import { ListItemButton } from "@mui/material";
+import { categoryFilter } from "../services";
 
 function CategoryPage() {
+  const { id } = useParams();
   const { productData, categoryTitle } = useContext(DataContext);
+  const [filterCategory, setFilterCategory] = useState(null);
 
-  const categoryFilter = productData?.filter((item) => {
-    return item.category.title == categoryTitle;
-  });
+  useEffect(() => {
+    categoryFilter(id).then((data) => {
+      setFilterCategory(data);
+    });
+  }, []);
 
   return (
     <>
       <div className="container mx-auto py-8">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-5">
           <NavLink
             to={"/"}
             className="text-[#808080] font-Poppins font-normal text-[14px] cursor-pointer hover:text-MainColor"
@@ -33,9 +37,12 @@ function CategoryPage() {
             Category
           </NavLink>
         </div>
+        <h2 className="font-Inter font-medium text-[18px] text-MainColor">
+          {categoryTitle}
+        </h2>
         <div className="card flex items-center gap-10 flex-wrap py-8">
-          {categoryFilter?.map((item) => {
-            return <Product item={item} key={item.id} />;
+          {filterCategory?.map((item, i) => {
+            return <Product item={item} key={i} />;
           })}
         </div>
       </div>

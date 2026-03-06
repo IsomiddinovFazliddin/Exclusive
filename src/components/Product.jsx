@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../App";
 import { baseUrl } from "../services/config";
-import { addToLiked, deletLiked } from "../services";
+import { addToCart, addToLiked, deletLiked } from "../services";
 
 function Product({ item }) {
   const {
@@ -18,18 +18,7 @@ function Product({ item }) {
   } = useContext(DataContext);
 
   const [index, setIndex] = useState(0);
-  const [isHover, setIsHover] = useState(false);
-
-  useEffect(() => {
-    let interval;
-
-    if (isHover) {
-      interval = setInterval(() => {
-        setIndex((info) => (info == item.pictures.length - 1 ? 0 : info + 1));
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isHover, item.pictures.length]);
+  const intervalRef = useRef(null);
 
   return (
     <>
@@ -39,15 +28,24 @@ function Product({ item }) {
       >
         <div
           className="imgs w-full h-62.5 px-10 bg-[#F5F5F5] flex items-center justify-center rounded-sm mb-4 overflow-hidden relative group"
-          onMouseEnter={() => setIsHover(true)}
+          onMouseEnter={() => {
+            if (intervalRef.current) return;
+
+            intervalRef.current = setInterval(() => {
+              setIndex((prev) => {
+                return prev == item?.pictures?.length - 1 ? 0 : prev + 1;
+              });
+            }, 900);
+          }}
           onMouseLeave={() => {
-            setIsHover(false);
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
             setIndex(0);
           }}
         >
           <img
-            className="w-full  rounded-"
-            src={`${baseUrl}${item?.pictures[index]}`}
+            className="w-full  rounded-sm"
+            src={`${baseUrl}${item.pictures[index]}`}
             alt=""
           />
           <div className="absolute top-3 -right-full grid gap-2.5 transition-all duration-300 ease-in-out group-hover:right-3">
