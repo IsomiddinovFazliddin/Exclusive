@@ -9,17 +9,29 @@ import {
   FaStar,
 } from "react-icons/fa";
 import { LuRefreshCcw } from "react-icons/lu";
-import { Link, NavLink, useParams } from "react-router-dom";
-import { productDetail } from "../services";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { addToCart, productDetail } from "../services";
 import { baseUrl } from "../services/config";
 import { DataContext } from "../App";
 import Product from "../components/Product";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { getToken } from "../services/token";
+import { toast } from "react-toastify";
 
 function ProductDetails() {
   const { id } = useParams();
-  const { productData } = useContext(DataContext);
+  const {
+    productData,
+    setProductModal,
+    modalId,
+    setModalId,
+    refreshCart,
+    cartData,
+    modalData,
+  } = useContext(DataContext);
   const [count, setCount] = useState(1);
+  const [color, setColor] = useState(null);
+  const [size, setSize] = useState(null);
   const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState(null);
   const [mainImg, setMainImg] = useState();
@@ -36,7 +48,9 @@ function ProductDetails() {
       setProduct(data);
     });
   }, [id]);
- 
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo({
       top: "0px",
@@ -137,6 +151,9 @@ function ProductDetails() {
                 {product?.properties?.color?.map((item, i) => {
                   return (
                     <button
+                      onClick={() => {
+                        setColor(item);
+                      }}
                       key={i}
                       className="w-5 h-5 rounded-full cursor-pointer focus:border-3 focus:border-gray-700"
                       style={{ backgroundColor: item }}
@@ -153,6 +170,9 @@ function ProductDetails() {
                 {product?.properties?.size?.map((item, i) => {
                   return (
                     <button
+                      onClick={() => {
+                        setSize(item);
+                      }}
                       key={i}
                       className="px-2 h-8 rounded-sm border border-[#808080] font-Poppins font-medium text-[14px] leading-5 text-MainColor cursor-pointer transition-all duration-300 ease-in-out hover:bg-[#DB4444] hover:text-[#FAFAFA] focus:bg-[#DB4444] focus:text-[#FAFAFA]"
                     >
@@ -186,6 +206,43 @@ function ProductDetails() {
               </div>
 
               <Button
+                onClick={() => {
+                  if (!getToken()) {
+                    toast.error("Avval ro'yxatdan o'ting");
+                    navigate("/signup");
+                    return;
+                  }
+
+                  const existingProduct = cartData?.cart_items?.find(
+                    (item) => Number(item.product_id) == Number(id),
+                  );
+
+                  if (existingProduct) {
+                    toast.info("Bu mahsulot allaqachon savatda");
+                    return;
+                  }
+
+                  if (product?.properties?.color?.length > 0 && !color) {
+                    toast.error("Rangni tanlang");
+                    return;
+                  }
+
+                  if (product?.properties?.size?.length > 0 && !size) {
+                    toast.error("Razmerni tanlang");
+                    return;
+                  }
+
+                  addToCart(id, count, color, size).then((data) => {
+                    toast.success("Mahsulot savatga qo'shildi");
+                    setProductModal(false);
+                    setModalId(null);
+                    setCount(1);
+                    setColor(null);
+                    setSize(null);
+                    console.log(data);
+                    refreshCart();
+                  });
+                }}
                 className="flex w-full"
                 sx={{
                   backgroundColor: "#DB4444",

@@ -19,6 +19,7 @@ function ProductModal() {
     count,
     setCount,
     refreshCart,
+    cartData,
   } = useContext(DataContext);
 
   const [color, setColor] = useState(null);
@@ -132,10 +133,20 @@ function ProductModal() {
               onClick={() => {
                 if (!getToken()) {
                   setProductModal(false);
-                  toast.error("Avval ro'yxatdan o'ting")
+                  toast.error("Avval ro'yxatdan o'ting");
                   navigate("/signup");
                   return;
                 }
+
+                const existingProduct = cartData?.cart_items?.find(
+                  (item) => Number(item.product_id) == Number(modalId),
+                );
+
+                if (existingProduct) {
+                  toast.info("Bu mahsulot allaqachon savatda");
+                  return;
+                }
+
                 if (modalData?.properties?.color?.length > 0 && !color) {
                   toast.error("Rangni tanlang");
                   return;

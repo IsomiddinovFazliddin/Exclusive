@@ -101,7 +101,7 @@ function Cart() {
                             refreshCart();
                           });
                           toast.success("Mahsulot o'chirib tashlandi");
-                          re;
+                          return;
                         }}
                       />
                     </div>
